@@ -81,4 +81,4 @@ When implementing or modifying this codebase:
 - **Authoritative spec:** `.claude/rules/CLAUDE.md`
 - **Based on:** Unified DSA Studio CLAUDE.md v1.0
 
-**Document version:** 1.0 · **Status:** Phase 2 complete — Phase 3 (analytics & tracker) next
+**Document version:** 1.0 · **Status:** Phase 3 complete — Phase 4 (import & community) next

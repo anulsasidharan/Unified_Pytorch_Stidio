@@ -115,9 +115,119 @@ export type QuestionDetail = {
   hints: string[];
 };
 
+export type DashboardData = {
+  today: {
+    exercises_done: number;
+    exercises_correct: number;
+    xp_earned: number;
+    time_spent_secs: number;
+    goal: number;
+    goal_met: boolean;
+  };
+  streak: { current: number; longest: number; last_active: string | null };
+  weekly: { date: string; exercises_done: number; xp_earned: number }[];
+  xp_this_week: number;
+  total_xp: number;
+  revision_due_today: number;
+  difficulty_breakdown: { basic: number; intermediate: number; advanced: number };
+  xp_timeline: { date: string; cumulative_xp: number }[];
+};
+
+export type ProgressSummary = {
+  modules: {
+    topic_id: number;
+    slug: string;
+    name: string;
+    icon: string | null;
+    color: string | null;
+    module_number: number;
+    total_questions: number;
+    questions_attempted: number;
+    questions_solved: number;
+    completion_pct: number;
+  }[];
+  totals: {
+    questions_attempted: number;
+    questions_solved: number;
+    completion_pct: number;
+  };
+};
+
+export type HeatmapData = {
+  cells: { date: string; count: number; level: number }[];
+  start_date: string;
+  end_date: string;
+};
+
+export type RevisionDueItem = {
+  question_id: number;
+  title: string;
+  difficulty: string;
+  topic_slug: string;
+  topic_name: string;
+  module_number: number;
+  next_review_date: string;
+  days_overdue: number;
+};
+
+export type RevisionStats = {
+  queue_size: number;
+  due_today: number;
+  overdue: number;
+};
+
+export type AttemptSubmitResult = {
+  id: number;
+  result: string;
+  xp_earned: number;
+  added_to_revision: boolean;
+  message?: string;
+};
+
 export const api = {
   getTopics: (token?: string | null) =>
     request<TopicListItem[]>("/topics", {}, token),
+
+  getDashboard: (token: string) =>
+    request<DashboardData>("/tracker/dashboard", {}, token),
+
+  getProgress: (token: string) =>
+    request<ProgressSummary>("/progress", {}, token),
+
+  getHeatmap: (token: string) =>
+    request<HeatmapData>("/tracker/heatmap", {}, token),
+
+  getRevisionDue: (token: string) =>
+    request<RevisionDueItem[]>("/revision/due", {}, token),
+
+  getRevisionStats: (token: string) =>
+    request<RevisionStats>("/revision/stats", {}, token),
+
+  submitRevisionReview: (token: string, questionId: number, rating: number) =>
+    request<{ next_review_date: string; xp_bonus: number }>(
+      "/revision/review",
+      {
+        method: "POST",
+        body: JSON.stringify({ question_id: questionId, rating }),
+      },
+      token,
+    ),
+
+  submitAttempt: (
+    token: string,
+    body: {
+      question_id: number;
+      code?: string;
+      result: string;
+      time_spent_secs?: number;
+      hints_used?: number;
+    },
+  ) =>
+    request<AttemptSubmitResult>(
+      "/attempts",
+      { method: "POST", body: JSON.stringify(body) },
+      token,
+    ),
 
   getTopic: (slug: string, token?: string | null) =>
     request<TopicDetail>(`/topics/${slug}`, {}, token),

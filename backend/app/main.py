@@ -5,7 +5,17 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
 from app.core.redis_client import close_redis
-from app.routers import attempts, auth, colab, questions, topics, tutor
+from app.routers import (
+    attempts,
+    auth,
+    colab,
+    progress,
+    questions,
+    revision,
+    topics,
+    tracker,
+    tutor,
+)
 
 settings = get_settings()
 
@@ -39,6 +49,9 @@ api_router.include_router(questions.router)
 api_router.include_router(attempts.router)
 api_router.include_router(colab.router)
 api_router.include_router(tutor.router)
+api_router.include_router(progress.router)
+api_router.include_router(tracker.router)
+api_router.include_router(revision.router)
 app.include_router(api_router)
 
 

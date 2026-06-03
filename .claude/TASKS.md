@@ -41,12 +41,12 @@
 
 | Task | Branch | Status |
 |------|--------|--------|
-| P3-1 · Progress & tracker APIs | `feature/progress-api` | ❌ Pending |
-| P3-2 · XP calculation + awards | `feature/xp-system` | ❌ Pending |
-| P3-3 · Celery nightly aggregation task | `feature/celery-aggregation` | ❌ Pending |
-| P3-4 · SM-2 spaced repetition service | `feature/sm2-revision` | ❌ Pending |
-| P3-5 · Dashboard UI (streak, heatmap, progress rings) | `feature/dashboard-ui` | ❌ Pending |
-| P3-6 · Revision queue page + review flow | `feature/revision-ui` | ❌ Pending |
+| P3-1 · Progress & tracker APIs | `feature/progress-api` | ✅ Completed |
+| P3-2 · XP calculation + awards | `feature/xp-system` | ✅ Completed |
+| P3-3 · Celery nightly aggregation task | `feature/celery-aggregation` | ✅ Completed |
+| P3-4 · SM-2 spaced repetition service | `feature/sm2-revision` | ✅ Completed |
+| P3-5 · Dashboard UI (streak, heatmap, progress rings) | `feature/dashboard-ui` | ✅ Completed |
+| P3-6 · Revision queue page + review flow | `feature/revision-ui` | ✅ Completed |
 
 ---
 
