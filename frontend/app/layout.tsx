@@ -4,7 +4,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "PyTorch Learning Studio",
-  description: "AI-powered interactive PyTorch learning platform",
+  description: "Learn PyTorch step-by-step with lessons, diagrams, and hands-on exercises",
 };
 
 export default function RootLayout({
@@ -21,7 +21,7 @@ export default function RootLayout({
               PyTorch Studio
             </Link>
             <Link href="/modules" className="text-slate-300 hover:text-white">
-              Modules
+              Learn
             </Link>
             <Link href="/tutor" className="text-slate-400 hover:text-white">
               AI Tutor
