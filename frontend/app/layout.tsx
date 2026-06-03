@@ -23,6 +23,9 @@ export default function RootLayout({
             <Link href="/modules" className="text-slate-300 hover:text-white">
               Modules
             </Link>
+            <Link href="/tutor" className="text-slate-400 hover:text-white">
+              AI Tutor
+            </Link>
             <Link href="/dashboard" className="text-slate-400 hover:text-white">
               Dashboard
             </Link>

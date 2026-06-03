@@ -79,10 +79,25 @@ export type TopicDetail = TopicListItem & {
   questions: QuestionSummary[];
 };
 
+export type TutorChatBody = {
+  message: string;
+  question_id?: number;
+  user_code?: string;
+  error_message?: string;
+};
+
+export type TutorUsage = {
+  messages_today: number;
+  daily_limit: number;
+  remaining: number;
+  resets_at: string;
+};
+
 export type QuestionDetail = {
   id: number;
   topic_id: number;
   topic_slug: string;
+  topic_name?: string;
   title: string;
   slug: string;
   difficulty: string;
@@ -110,5 +125,26 @@ export const api = {
   getQuestion: (id: number) => request<QuestionDetail>(`/questions/${id}`),
 
   getColabUrl: (questionId: number) =>
-    request<{ colab_url: string; source: string }>(`/colab/${questionId}`),
+    request<{ colab_url: string; source: string; nbviewer_url?: string | null }>(
+      `/colab/${questionId}`,
+    ),
+
+  tutorChat: (token: string, body: TutorChatBody) =>
+    request<{ message: { role: string; content: string; timestamp: string }; usage: TutorUsage }>(
+      "/tutor/chat",
+      { method: "POST", body: JSON.stringify(body) },
+      token,
+    ),
+
+  getTutorHistory: (token: string) =>
+    request<{ messages: { role: string; content: string; timestamp?: string }[] }>(
+      "/tutor/history",
+      {},
+      token,
+    ),
+
+  getTutorUsage: (token: string) => request<TutorUsage>("/tutor/usage", {}, token),
+
+  clearTutorHistory: (token: string) =>
+    request<void>("/tutor/history", { method: "DELETE" }, token),
 };

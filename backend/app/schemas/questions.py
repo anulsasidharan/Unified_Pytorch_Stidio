@@ -32,6 +32,7 @@ class QuestionDetail(BaseModel):
     id: int
     topic_id: int
     topic_slug: str
+    topic_name: str | None = None
     title: str
     slug: str
     difficulty: str
