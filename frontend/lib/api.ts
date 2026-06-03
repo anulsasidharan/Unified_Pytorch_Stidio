@@ -62,6 +62,20 @@ export type TopicListItem = {
   } | null;
 };
 
+export type QuestionListItem = {
+  id: number;
+  topic_id: number;
+  topic_slug: string;
+  title: string;
+  slug: string;
+  difficulty: string;
+  question_type: string;
+  xp_reward: number;
+  time_estimate_mins: number;
+  gpu_required: boolean;
+  tags: string[] | null;
+};
+
 export type QuestionSummary = {
   id: number;
   title: string;
@@ -233,6 +247,43 @@ export const api = {
     request<TopicDetail>(`/topics/${slug}`, {}, token),
 
   getQuestion: (id: number) => request<QuestionDetail>(`/questions/${id}`),
+
+  searchQuestions: (params: {
+    q: string;
+    topic?: string;
+    difficulty?: string;
+    type?: string;
+    tag?: string;
+    limit?: number;
+  }) => {
+    const q = new URLSearchParams();
+    q.set("q", params.q);
+    if (params.topic) q.set("topic", params.topic);
+    if (params.difficulty) q.set("difficulty", params.difficulty);
+    if (params.type) q.set("type", params.type);
+    if (params.tag) q.set("tag", params.tag);
+    if (params.limit) q.set("limit", String(params.limit));
+    return request<QuestionListItem[]>(`/questions/search?${q}`);
+  },
+
+  listQuestions: (params?: {
+    topic?: string;
+    difficulty?: string;
+    type?: string;
+    tag?: string;
+    q?: string;
+    limit?: number;
+  }) => {
+    const q = new URLSearchParams();
+    if (params?.topic) q.set("topic", params.topic);
+    if (params?.difficulty) q.set("difficulty", params.difficulty);
+    if (params?.type) q.set("type", params.type);
+    if (params?.tag) q.set("tag", params.tag);
+    if (params?.q) q.set("q", params.q);
+    if (params?.limit) q.set("limit", String(params.limit));
+    const qs = q.toString();
+    return request<QuestionListItem[]>(`/questions${qs ? `?${qs}` : ""}`);
+  },
 
   getColabUrl: (questionId: number) =>
     request<{ colab_url: string; source: string; nbviewer_url?: string | null }>(

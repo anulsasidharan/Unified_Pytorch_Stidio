@@ -1,7 +1,7 @@
 """Question bank routes — list, filter, detail."""
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
-from sqlalchemy import func, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
@@ -27,13 +27,57 @@ def _build_hints(question: Question) -> list[str]:
     return DEFAULT_HINTS
 
 
+@router.get("/search", response_model=list[QuestionListItem])
+async def search_questions(
+    q: str = Query(..., min_length=1, description="Search title, statement, or tags"),
+    topic: str | None = Query(None, description="Topic slug filter"),
+    difficulty: str | None = Query(None),
+    question_type: str | None = Query(None, alias="type"),
+    tag: str | None = Query(None),
+    limit: int = Query(50, ge=1, le=200),
+    db: AsyncSession = Depends(get_db),
+) -> list[QuestionListItem]:
+    return await _list_questions_filtered(
+        db,
+        topic=topic,
+        difficulty=difficulty,
+        question_type=question_type,
+        tag=tag,
+        search=q,
+        limit=limit,
+    )
+
+
 @router.get("", response_model=list[QuestionListItem])
 async def list_questions(
     topic: str | None = Query(None, description="Topic slug filter"),
     difficulty: str | None = Query(None),
     question_type: str | None = Query(None, alias="type"),
     tag: str | None = Query(None),
+    q: str | None = Query(None, description="Search title, statement, or tags"),
+    limit: int = Query(200, ge=1, le=500),
     db: AsyncSession = Depends(get_db),
+) -> list[QuestionListItem]:
+    return await _list_questions_filtered(
+        db,
+        topic=topic,
+        difficulty=difficulty,
+        question_type=question_type,
+        tag=tag,
+        search=q,
+        limit=limit,
+    )
+
+
+async def _list_questions_filtered(
+    db: AsyncSession,
+    *,
+    topic: str | None,
+    difficulty: str | None,
+    question_type: str | None,
+    tag: str | None,
+    search: str | None,
+    limit: int,
 ) -> list[QuestionListItem]:
     stmt = (
         select(Question, Topic.slug)
@@ -48,8 +92,18 @@ async def list_questions(
         stmt = stmt.where(Question.question_type == question_type)
     if tag:
         stmt = stmt.where(Question.tags.contains([tag]))
+    if search:
+        pattern = f"%{search.strip()}%"
+        stmt = stmt.where(
+            or_(
+                Question.title.ilike(pattern),
+                Question.problem_statement.ilike(pattern),
+                Question.slug.ilike(pattern),
+                func.coalesce(func.array_to_string(Question.tags, ","), "").ilike(pattern),
+            )
+        )
 
-    stmt = stmt.order_by(Topic.order_index, Question.id)
+    stmt = stmt.order_by(Topic.order_index, Question.id).limit(limit)
     result = await db.execute(stmt)
     rows = result.all()
 

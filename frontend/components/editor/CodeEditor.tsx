@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { useCallback } from "react";
 import type { editor } from "monaco-editor";
+import { useTheme } from "@/components/theme/ThemeProvider";
 import { PYTORCH_SNIPPETS } from "./pytorch-snippets";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react").then((m) => m.default), {
@@ -50,6 +51,9 @@ function registerPyTorchSnippets(monaco: typeof import("monaco-editor")) {
 }
 
 export function CodeEditor({ value, onChange, readOnly }: Props) {
+  const { theme } = useTheme();
+  const editorTheme = theme === "dark" ? "vs-dark" : "vs";
+
   const onMount = useCallback((ed: editor.IStandaloneCodeEditor, monaco: typeof import("monaco-editor")) => {
     registerPyTorchSnippets(monaco);
     ed.updateOptions({ minimap: { enabled: false }, fontSize: 14, tabSize: 4 });
@@ -60,7 +64,7 @@ export function CodeEditor({ value, onChange, readOnly }: Props) {
       <MonacoEditor
         height="320px"
         language="python"
-        theme="vs-dark"
+        theme={editorTheme}
         value={value}
         onChange={(v) => onChange(v ?? "")}
         options={{

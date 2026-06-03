@@ -30,6 +30,12 @@ export default async function ModulesPage() {
         </p>
       )}
 
+      <p className="text-sm">
+        <Link href="/exercises" className="text-indigo-500 hover:text-indigo-400 dark:text-indigo-400">
+          Search all exercises →
+        </Link>
+      </p>
+
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {topics.map((topic) => {
           const pct = topic.progress?.completion_pct ?? 0;
