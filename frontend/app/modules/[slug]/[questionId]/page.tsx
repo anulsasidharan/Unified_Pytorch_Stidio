@@ -2,7 +2,9 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { ExerciseClient } from "./ExerciseClient";
+import { LessonPrimer } from "@/components/learn/LessonPrimer";
 import { DifficultyBadge } from "@/components/question/DifficultyBadge";
+import { getLessonForQuestion } from "@/lib/lessons";
 import { api } from "@/lib/api";
 
 export const dynamic = "force-dynamic";
@@ -23,6 +25,12 @@ export default async function ExercisePage({ params }: Props) {
   if (question.topic_slug !== params.slug) {
     notFound();
   }
+
+  const primerLesson = getLessonForQuestion(
+    params.slug,
+    question.slug,
+    question.difficulty,
+  );
 
   return (
     <div className="space-y-6">
@@ -48,6 +56,8 @@ export default async function ExercisePage({ params }: Props) {
           {question.pytorch_version}
         </p>
       </div>
+
+      {primerLesson && <LessonPrimer topicSlug={params.slug} lesson={primerLesson} />}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <article className="prose-problem rounded-xl border border-slate-800 bg-slate-900/40 p-5">

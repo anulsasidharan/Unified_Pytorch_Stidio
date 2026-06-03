@@ -6,6 +6,10 @@ dist/
 build/
 *.tsbuildinfo
 
+# Next.js
+.next/
+frontend/.next/
+
 # Environment & secrets
 .env
 .env.*

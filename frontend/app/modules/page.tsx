@@ -18,7 +18,8 @@ export default async function ModulesPage() {
       <div>
         <h1 className="text-2xl font-bold">PyTorch Modules</h1>
         <p className="mt-2 text-slate-400">
-          13 modules from tensors to Lightning. Phase 1 includes exercises for modules 1–3.
+          13 modules from tensors to Lightning. Each module: learn concepts first, then practice
+          exercises.
         </p>
       </div>
 
@@ -51,7 +52,7 @@ export default async function ModulesPage() {
                 {topic.description}
               </p>
               <div className="mt-4 flex items-center justify-between text-xs text-slate-500">
-                <span>{topic.total_questions} exercises</span>
+                <span>Lessons + {topic.total_questions} exercises</span>
                 <span>{Math.round(pct)}% complete</span>
               </div>
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-slate-800">
