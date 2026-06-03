@@ -81,7 +81,7 @@ async def bookmarked_questions(
 @router.get("/{question_id}", response_model=QuestionDetail)
 async def get_question(question_id: int, db: AsyncSession = Depends(get_db)) -> QuestionDetail:
     result = await db.execute(
-        select(Question, Topic.slug)
+        select(Question, Topic.slug, Topic.name)
         .join(Topic, Question.topic_id == Topic.id)
         .where(Question.id == question_id, Question.is_published.is_(True))
     )
@@ -89,11 +89,12 @@ async def get_question(question_id: int, db: AsyncSession = Depends(get_db)) -> 
     if row is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
 
-    question, topic_slug = row
+    question, topic_slug, topic_name = row
     return QuestionDetail(
         id=question.id,
         topic_id=question.topic_id,
         topic_slug=topic_slug,
+        topic_name=topic_name,
         title=question.title,
         slug=question.slug,
         difficulty=question.difficulty,

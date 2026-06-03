@@ -27,13 +27,13 @@
 
 | Task | Branch | Status |
 |------|--------|--------|
-| P2-1 · Seed Modules 04–07 questions | `feature/seed-modules-04-07` | ❌ Pending |
-| P2-2 · ColabLauncher + colab_service.py | `feature/colab-integration` | ❌ Pending |
-| P2-3 · ShapeValidator component | `feature/shape-validator` | ❌ Pending |
-| P2-4 · Monaco PyTorch autocomplete snippets | `feature/monaco-snippets` | ❌ Pending |
-| P2-5 · Anthropic tutor_service.py | `feature/tutor-service` | ❌ Pending |
-| P2-6 · Tutor API + exercise context injection | `feature/tutor-api` | ❌ Pending |
-| P2-7 · Tutor UI (`/tutor` + in-exercise panel) | `feature/tutor-ui` | ❌ Pending |
+| P2-1 · Seed Modules 04–07 questions | `feature/seed-modules-04-07` | ✅ Completed |
+| P2-2 · ColabLauncher + colab_service.py | `feature/colab-integration` | ✅ Completed |
+| P2-3 · ShapeValidator component | `feature/shape-validator` | ✅ Completed |
+| P2-4 · Monaco PyTorch autocomplete snippets | `feature/monaco-snippets` | ✅ Completed |
+| P2-5 · Anthropic tutor_service.py | `feature/tutor-service` | ✅ Completed |
+| P2-6 · Tutor API + exercise context injection | `feature/tutor-api` | ✅ Completed |
+| P2-7 · Tutor UI (`/tutor` + in-exercise panel) | `feature/tutor-ui` | ✅ Completed |
 
 ---
 

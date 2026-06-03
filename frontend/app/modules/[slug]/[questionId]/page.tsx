@@ -62,9 +62,12 @@ export default async function ExercisePage({ params }: Props) {
 
         <ExerciseClient
           questionId={question.id}
+          moduleName={question.topic_name ?? question.topic_slug}
+          title={question.title}
           starterCode={question.starter_code ?? "import torch\n"}
           colabLink={question.colab_link}
           questionType={question.question_type}
+          expectedOutputShape={question.expected_output_shape}
         />
       </div>
     </div>
