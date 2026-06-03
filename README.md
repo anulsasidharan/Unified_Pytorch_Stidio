@@ -5,7 +5,12 @@ Fork of Unified DSA Studio — AI-powered PyTorch learning platform.
 ## Quick start (Phase 1)
 
 ```powershell
-# Infrastructure
+# Full stack (PostgreSQL, Redis, FastAPI, Next.js)
+copy .env.example .env
+docker compose up -d --build
+docker compose logs -f
+
+# Or run services locally:
 docker compose up -d postgres redis
 
 # Backend
