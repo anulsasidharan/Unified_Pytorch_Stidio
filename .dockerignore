@@ -1,0 +1,14 @@
+**/node_modules
+**/dist
+.git
+.github
+.claude
+test-results
+**/.env
+**/.env.*
+!**/.env.example
+*.md
+!README.md
+coverage
+.playwright
+terminals

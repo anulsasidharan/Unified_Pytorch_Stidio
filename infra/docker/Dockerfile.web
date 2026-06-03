@@ -1,0 +1,23 @@
+# DSA Studio Web — Vite build served by nginx (proxies /api to the API container)
+FROM node:20-alpine AS deps
+WORKDIR /app
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/
+RUN npm ci
+
+FROM deps AS builder
+COPY tsconfig.base.json ./
+COPY packages/shared ./packages/shared
+COPY apps/web ./apps/web
+RUN npm run build -w @dsa-studio/shared
+WORKDIR /app/apps/web
+# Empty VITE_API_URL → browser calls /api on the same origin; nginx proxies to the API service.
+ENV VITE_API_URL=
+RUN npm run build
+
+FROM nginx:1.27-alpine AS runner
+COPY infra/docker/nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY --from=builder /app/apps/web/dist /usr/share/nginx/html
+EXPOSE 80

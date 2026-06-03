@@ -1,0 +1,48 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+build/
+*.tsbuildinfo
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS & editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Test & coverage
+coverage/
+
+# Vite
+apps/web/dist/
+**/.vite/
+
+# Prisma (generated client lives in node_modules; local DB artifacts)
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+
+# Docker local overrides & compose env
+docker-compose.override.yml
+infra/docker/.env
+
+# Misc
+*.local
+.cache/
+
+# Code sandbox ephemeral workspaces (local runner)
+dsa-sandbox-*/
+dsa-docker-*/

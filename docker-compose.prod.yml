@@ -1,0 +1,8 @@
+# Production compose — extend and wire frontend + Celery in Phase 6.
+services:
+  backend:
+    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      APP_ENV: production
+      RUN_MIGRATIONS: "true"
+      SEED_TOPICS: "false"

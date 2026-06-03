@@ -1,0 +1,920 @@
+openapi: 3.0.3
+info:
+  title: DSA Studio API
+  description: REST API for the DSA Studio learning platform — through Phase 4 Advanced Features.
+  version: 0.4.0
+  contact:
+    name: DSA Studio Team
+
+servers:
+  - url: http://localhost:4000/api
+    description: Local development
+
+tags:
+  - name: Health
+  - name: Auth
+  - name: Topics
+  - name: Questions
+  - name: Practice
+  - name: Progress
+  - name: Revision
+  - name: Import
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ApiSuccess:
+      type: object
+      required: [success, data]
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+
+    ApiError:
+      type: object
+      required: [success, error]
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+          nullable: true
+        avatarUrl:
+          type: string
+          nullable: true
+        learningLevel:
+          type: string
+          enum: [beginner, intermediate, advanced]
+        dailyTarget:
+          type: integer
+        currentStreak:
+          type: integer
+        longestStreak:
+          type: integer
+        totalQuestionsSolved:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    Topic:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        slug:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        category:
+          type: string
+        difficulty:
+          type: string
+          enum: [basic, intermediate, advanced]
+        orderIndex:
+          type: integer
+        icon:
+          type: string
+          nullable: true
+        prerequisiteIds:
+          type: array
+          items:
+            type: string
+        isActive:
+          type: boolean
+        totalQuestions:
+          type: integer
+
+    TestCase:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        questionId:
+          type: string
+          format: uuid
+        input:
+          type: string
+        expectedOutput:
+          type: string
+        explanation:
+          type: string
+          nullable: true
+        isSample:
+          type: boolean
+        isHidden:
+          type: boolean
+        orderIndex:
+          type: integer
+
+    QuestionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        topicId:
+          type: string
+          format: uuid
+        topicSlug:
+          type: string
+          nullable: true
+        slug:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        difficulty:
+          type: string
+          enum: [basic, intermediate, advanced]
+        hints:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        source:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    QuestionDetail:
+      allOf:
+        - $ref: '#/components/schemas/QuestionSummary'
+        - type: object
+          properties:
+            constraints:
+              type: string
+              nullable: true
+            inputFormat:
+              type: string
+              nullable: true
+            outputFormat:
+              type: string
+              nullable: true
+            timeComplexity:
+              type: string
+              nullable: true
+            spaceComplexity:
+              type: string
+              nullable: true
+            testCases:
+              type: array
+              items:
+                $ref: '#/components/schemas/TestCase'
+
+    PaginatedMeta:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        totalPages:
+          type: integer
+
+    RegisterRequest:
+      type: object
+      required: [username, email, password]
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 50
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 8
+        fullName:
+          type: string
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: API health check
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/ApiSuccess'
+                  - type: object
+                    properties:
+                      data:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: ok
+                          service:
+                            type: string
+                          version:
+                            type: string
+                          timestamp:
+                            type: string
+                            format: date-time
+
+  /auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: User created
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '409':
+          description: Email or username already exists
+
+  /auth/login:
+    post:
+      tags: [Auth]
+      summary: Login and receive JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+        '401':
+          description: Invalid credentials
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Logout (client discards token)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logged out
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Get current user profile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user
+        '401':
+          description: Unauthorized
+
+  /topics:
+    get:
+      tags: [Topics]
+      summary: List topics
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [basic, intermediate, advanced]
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Paginated topic list
+
+  /topics/progress:
+    get:
+      tags: [Topics]
+      summary: User completion per topic
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Topic progress breakdown
+
+  /topics/{id}:
+    get:
+      tags: [Topics]
+      summary: Get topic by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Topic detail
+        '404':
+          description: Topic not found
+
+  /topics/{id}/questions:
+    get:
+      tags: [Topics]
+      summary: List questions for a topic
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Questions in topic
+
+  /questions:
+    get:
+      tags: [Questions]
+      summary: List questions with filters
+      parameters:
+        - name: topicId
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: topicSlug
+          in: query
+          schema:
+            type: string
+        - name: difficulty
+          in: query
+          schema:
+            type: string
+            enum: [basic, intermediate, advanced]
+        - name: tag
+          in: query
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Paginated question list
+
+  /questions/{id}:
+    get:
+      tags: [Questions]
+      summary: Get question detail (sample test cases only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Question detail
+        '404':
+          description: Question not found
+
+  /run:
+    post:
+      tags: [Practice]
+      summary: Run code against sample test cases
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questionId, language, code]
+              properties:
+                questionId:
+                  type: string
+                  format: uuid
+                language:
+                  type: string
+                  enum: [python, javascript, typescript]
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Sample test run results
+
+  /submit:
+    post:
+      tags: [Practice]
+      summary: Submit code for full grading (all test cases)
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questionId, language, code]
+              properties:
+                questionId:
+                  type: string
+                  format: uuid
+                language:
+                  type: string
+                  enum: [python, javascript, typescript]
+                code:
+                  type: string
+      responses:
+        '200':
+          description: Submission result with status and timing
+
+  /questions/{id}/hints:
+    get:
+      tags: [Questions]
+      summary: Get progressive hints up to tier N
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: tier
+          in: query
+          schema:
+            type: integer
+            default: 1
+      responses:
+        '200':
+          description: Revealed hints
+
+  /questions/{id}/solutions:
+    get:
+      tags: [Questions]
+      summary: Get solutions (after first attempt)
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Solution list
+        '403':
+          description: Solutions locked until first attempt
+
+  /questions/{id}/starter:
+    get:
+      tags: [Questions]
+      summary: Get starter code template
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: language
+          in: query
+          schema:
+            type: string
+            enum: [python, javascript, typescript]
+            default: python
+      responses:
+        '200':
+          description: Starter code
+
+  /questions/slug/{slug}:
+    get:
+      tags: [Questions]
+      summary: Get question by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Question detail
+
+  /topics/slug/{slug}:
+    get:
+      tags: [Topics]
+      summary: Get topic by slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Topic detail
+
+  /auth/profile:
+    put:
+      tags: [Auth]
+      summary: Update user profile and daily goal
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                fullName:
+                  type: string
+                learningLevel:
+                  type: string
+                  enum: [beginner, intermediate, advanced]
+                dailyTarget:
+                  type: integer
+                  minimum: 1
+                  maximum: 50
+                targetGoal:
+                  type: string
+      responses:
+        '200':
+          description: Updated user profile
+
+  /progress:
+    get:
+      tags: [Progress]
+      summary: Overall progress, streak summary, earned badges
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Progress overview
+
+  /progress/daily:
+    get:
+      tags: [Progress]
+      summary: Daily activity history
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Paginated daily activity
+    post:
+      tags: [Progress]
+      summary: Log or update daily activity manually
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                activityDate:
+                  type: string
+                  format: date
+                questionsAttempted:
+                  type: integer
+                questionsSolved:
+                  type: integer
+                timeSpentMinutes:
+                  type: integer
+                topicsCovered:
+                  type: array
+                  items:
+                    type: string
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Activity logged
+
+  /progress/streak:
+    get:
+      tags: [Progress]
+      summary: Streak information
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current and longest streak
+
+  /progress/analytics:
+    get:
+      tags: [Progress]
+      summary: Analytics data for charts and badges
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: days
+          in: query
+          schema:
+            type: integer
+            default: 30
+      responses:
+        '200':
+          description: Heatmap, weekly bar, topic pie, badges
+
+  /revision/queue:
+    get:
+      tags: [Revision]
+      summary: Full revision queue
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: includeCompleted
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Queue items and stats
+
+  /revision/due:
+    get:
+      tags: [Revision]
+      summary: Items due today or earlier
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Due items and stats
+
+  /revision/add:
+    post:
+      tags: [Revision]
+      summary: Mark question for revision
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Queue item created
+
+  /revision/{id}/complete:
+    put:
+      tags: [Revision]
+      summary: Mark revision session complete
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Completed; next interval scheduled if applicable
+
+  /import/manual:
+    post:
+      tags: [Import]
+      summary: Create question via manual entry
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Question created
+
+  /import/csv:
+    post:
+      tags: [Import]
+      summary: Bulk import from CSV content
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Questions imported
+
+  /import/json:
+    post:
+      tags: [Import]
+      summary: Bulk import from JSON body
+      security:
+        - bearerAuth: []
+      responses:
+        '201':
+          description: Questions imported
+
+  /import/url:
+    post:
+      tags: [Import]
+      summary: URL-assisted import (preview or confirm)
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Preview metadata
+        '201':
+          description: Question created after confirm
+
+  /import/history:
+    get:
+      tags: [Import]
+      summary: User import history
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Paginated custom question imports
+
+  /import/classify:
+    post:
+      tags: [Import]
+      summary: AI classify raw problem text
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rawText]
+              properties:
+                rawText:
+                  type: string
+      responses:
+        '200':
+          description: Suggested title, difficulty, topic, tags for user review
+
+  /chat/query:
+    post:
+      tags: [Chat]
+      summary: General DSA chat query
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Assistant reply with session id
+
+  /chat/hint:
+    post:
+      tags: [Chat]
+      summary: Progressive AI hint for current problem
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Tiered hint without full solution
+
+  /chat/review:
+    post:
+      tags: [Chat]
+      summary: AI code review
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Correctness, complexity, and optimization feedback
+
+  /chat/history:
+    get:
+      tags: [Chat]
+      summary: Paginated chat session list
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Chat sessions with last message preview
+
+  /chat/history/{sessionId}:
+    get:
+      tags: [Chat]
+      summary: Messages for a chat session
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Full session message history
+
+  /chat/learning-path:
+    get:
+      tags: [Chat]
+      summary: Personalized learning path recommendations
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Rule-based and AI-suggested topic sequence

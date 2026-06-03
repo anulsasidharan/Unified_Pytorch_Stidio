@@ -1,0 +1,55 @@
+"""
+Seed Module 03 — Neural Network Basics (20 exercises).
+Usage: python -m seeds.questions_nn_module
+"""
+
+import asyncio
+
+from seeds.loader import build_exercise, seed_questions_for_topic
+
+TOPIC_SLUG = "nn-module"
+
+_SPECS: list[tuple] = [
+    ("Subclass nn.Module", "subclass-nn-module", "basic", "Define `TinyNet(nn.Module)` with one `Linear(4,2)` and implement `forward`.", "import torch\nfrom torch import nn\nclass TinyNet(nn.Module):\n    def __init__(self):\n        super().__init__()\n        # YOUR CODE\n    def forward(self, x):\n        pass\nm = TinyNet()\nprint(m(torch.randn(1,4)).shape)", "import torch\nfrom torch import nn\nclass TinyNet(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc = nn.Linear(4, 2)\n    def forward(self, x):\n        return self.fc(x)\nm = TinyNet()\nprint(m(torch.randn(1,4)).shape)", ["nn", "module"], "code_completion"),
+    ("Linear layer forward", "linear-layer-forward", "basic", "Use `nn.Linear(3,1)` on random input shape `(5,3)`.", "import torch\nfrom torch import nn\nlayer = # YOUR CODE\nx = torch.randn(5, 3)\nprint(layer(x).shape)", "import torch\nfrom torch import nn\nlayer = nn.Linear(3, 1)\nx = torch.randn(5, 3)\nprint(layer(x).shape)", ["nn", "linear"], "code_completion"),
+    ("ReLU activation", "relu-activation", "basic", "Apply `nn.ReLU()` to tensor with negative values.", "import torch\nfrom torch import nn\nx = torch.tensor([-2., -1., 0., 1., 2.])\nout = # YOUR CODE\nprint(out)", "import torch\nfrom torch import nn\nx = torch.tensor([-2., -1., 0., 1., 2.])\nout = nn.ReLU()(x)\nprint(out)", ["nn", "activation"], "code_completion"),
+    ("Sequential container", "sequential-container", "basic", "Build `nn.Sequential(Linear(2,4), ReLU(), Linear(4,1))` and run forward.", "import torch\nfrom torch import nn\nmodel = # YOUR CODE\nprint(model(torch.randn(3,2)).shape)", "import torch\nfrom torch import nn\nmodel = nn.Sequential(nn.Linear(2,4), nn.ReLU(), nn.Linear(4,1))\nprint(model(torch.randn(3,2)).shape)", ["nn", "sequential"], "code_completion"),
+    ("Count parameters", "count-parameters", "basic", "Print total trainable parameter count for a small linear model.", "import torch\nfrom torch import nn\nm = nn.Linear(10, 5)\n# count trainable params\nprint(sum(p.numel() for p in m.parameters() if p.requires_grad))", "import torch\nfrom torch import nn\nm = nn.Linear(10, 5)\nprint(sum(p.numel() for p in m.parameters() if p.requires_grad))", ["nn", "parameters"], "code_completion"),
+    ("Module eval mode", "module-eval-mode", "basic", "Toggle `Dropout(0.5)` train vs eval and print output difference exists.", "import torch\nfrom torch import nn\nd = nn.Dropout(0.5)\nx = torch.ones(4)\ntorch.manual_seed(0)\nd.train()\na = d(x)\ntorch.manual_seed(0)\nd.eval()\nb = d(x)\nprint((a == b).all().item())", "import torch\nfrom torch import nn\nd = nn.Dropout(0.5)\nx = torch.ones(4)\ntorch.manual_seed(0)\nd.train()\na = d(x)\ntorch.manual_seed(0)\nd.eval()\nb = d(x)\nprint((a == b).all().item())", ["nn", "dropout"], "code_completion"),
+    ("BatchNorm2d shape", "batchnorm2d-shape", "basic", "Run `BatchNorm2d(3)` on input `(N,C,H,W)=(2,3,8,8)`.", "import torch\nfrom torch import nn\nbn = nn.BatchNorm2d(3)\nx = torch.randn(2, 3, 8, 8)\nprint(bn(x).shape)", "import torch\nfrom torch import nn\nbn = nn.BatchNorm2d(3)\nx = torch.randn(2, 3, 8, 8)\nprint(bn(x).shape)", ["nn", "batchnorm"], "code_completion"),
+    ("ModuleList stack", "modulelist-stack", "intermediate", "Use `nn.ModuleList` of three `Linear(4,4)` layers applied sequentially.", "import torch\nfrom torch import nn\nlayers = nn.ModuleList([nn.Linear(4,4) for _ in range(3)])\nx = torch.randn(2,4)\nfor layer in layers:\n    x = # YOUR CODE\nprint(x.shape)", "import torch\nfrom torch import nn\nlayers = nn.ModuleList([nn.Linear(4,4) for _ in range(3)])\nx = torch.randn(2,4)\nfor layer in layers:\n    x = layer(x)\nprint(x.shape)", ["nn", "modulelist"], "code_completion"),
+    ("ModuleDict routing", "moduledict-routing", "intermediate", "Store `{'a': Linear(2,2), 'b': Linear(2,3)}` in `ModuleDict` and call branch `a`.", "import torch\nfrom torch import nn\nblocks = nn.ModuleDict({'a': nn.Linear(2,2), 'b': nn.Linear(2,3)})\nx = torch.randn(1,2)\nprint(blocks['a'](x).shape)", "import torch\nfrom torch import nn\nblocks = nn.ModuleDict({'a': nn.Linear(2,2), 'b': nn.Linear(2,3)})\nx = torch.randn(1,2)\nprint(blocks['a'](x).shape)", ["nn", "moduledict"], "code_completion"),
+    ("Weight init xavier", "xavier-init", "intermediate", "Apply `nn.init.xavier_uniform_` on `Linear(8,8).weight`.", "import torch\nfrom torch import nn\nlayer = nn.Linear(8, 8)\n# init weight\nprint(layer.weight.abs().mean().item() > 0)", "import torch\nfrom torch import nn\nlayer = nn.Linear(8, 8)\nnn.init.xavier_uniform_(layer.weight)\nprint(layer.weight.abs().mean().item() > 0)", ["nn", "init"], "code_completion"),
+    ("Buffer registration", "register-buffer", "intermediate", "Register constant buffer `mask` and use in forward.", "import torch\nfrom torch import nn\nclass M(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.register_buffer('mask', torch.ones(4))\n    def forward(self, x):\n        return x * self.mask\nprint(M()(torch.ones(4)))", "import torch\nfrom torch import nn\nclass M(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.register_buffer('mask', torch.ones(4))\n    def forward(self, x):\n        return x * self.mask\nprint(M()(torch.ones(4)))", ["nn", "buffer"], "code_completion"),
+    ("Softmax classifier head", "softmax-classifier", "intermediate", "Linear 4->3 + softmax on dim=-1; rows sum to 1.", "import torch\nfrom torch import nn\nimport torch.nn.functional as F\nx = torch.randn(2,4)\nlogits = nn.Linear(4,3)(x)\nprobs = # YOUR CODE\nprint(torch.allclose(probs.sum(dim=-1), torch.ones(2)))", "import torch\nfrom torch import nn\nimport torch.nn.functional as F\nx = torch.randn(2,4)\nlogits = nn.Linear(4,3)(x)\nprobs = F.softmax(logits, dim=-1)\nprint(torch.allclose(probs.sum(dim=-1), torch.ones(2)))", ["nn", "softmax"], "code_completion"),
+    ("CrossEntropy loss", "crossentropy-loss", "intermediate", "Compute `CrossEntropyLoss` for logits `(2,3)` and targets length 2.", "import torch\nfrom torch import nn\nloss_fn = nn.CrossEntropyLoss()\nlogits = torch.randn(2,3)\ntargets = torch.tensor([0,2])\nprint(loss_fn(logits, targets).item())", "import torch\nfrom torch import nn\nloss_fn = nn.CrossEntropyLoss()\nlogits = torch.randn(2,3)\ntargets = torch.tensor([0,2])\nprint(loss_fn(logits, targets).item())", ["nn", "loss"], "code_completion"),
+    ("Flatten + MLP", "flatten-mlp", "intermediate", "Flatten `(2,3,4)` to `(2,12)` then Linear to 5 classes.", "import torch\nfrom torch import nn\nx = torch.randn(2,3,4)\nmodel = nn.Sequential(nn.Flatten(), nn.Linear(12,5))\nprint(model(x).shape)", "import torch\nfrom torch import nn\nx = torch.randn(2,3,4)\nmodel = nn.Sequential(nn.Flatten(), nn.Linear(12,5))\nprint(model(x).shape)", ["nn", "mlp"], "code_completion"),
+    ("Custom layer forward", "custom-layer-forward", "advanced", "Implement `ScaleLayer` multiplying input by learnable scalar parameter.", "import torch\nfrom torch import nn\nclass ScaleLayer(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.scale = nn.Parameter(torch.tensor(2.0))\n    def forward(self, x):\n        pass\nprint(ScaleLayer()(torch.ones(2)))", "import torch\nfrom torch import nn\nclass ScaleLayer(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.scale = nn.Parameter(torch.tensor(2.0))\n    def forward(self, x):\n        return x * self.scale\nprint(ScaleLayer()(torch.ones(2)))", ["nn", "custom"], "code_completion"),
+    ("Weight tying concept", "weight-tying", "advanced", "Share same `nn.Parameter` as embedding and decoder weight (print `is` check).", "import torch\nfrom torch import nn\nshared = nn.Parameter(torch.randn(4,4))\nemb = nn.Embedding(4,4)\nemb.weight = shared\nprint(emb.weight is shared)", "import torch\nfrom torch import nn\nshared = nn.Parameter(torch.randn(4,4))\nemb = nn.Embedding(4,4)\nemb.weight = shared\nprint(emb.weight is shared)", ["nn", "parameters"], "code_completion"),
+    ("Model surgery replace head", "model-surgery-head", "advanced", "Replace last layer of `Sequential` with new `Linear(4,10)`.", "import torch\nfrom torch import nn\nm = nn.Sequential(nn.Linear(2,4), nn.ReLU(), nn.Linear(4,1))\n# replace last layer\nprint(m[-1].out_features)", "import torch\nfrom torch import nn\nm = nn.Sequential(nn.Linear(2,4), nn.ReLU(), nn.Linear(4,1))\nm[-1] = nn.Linear(4, 10)\nprint(m[-1].out_features)", ["nn", "surgery"], "code_completion"),
+    ("named_modules walk", "named-modules-walk", "advanced", "Print count of modules in small CNN using `named_modules()`.", "import torch\nfrom torch import nn\nm = nn.Sequential(nn.Conv2d(1,2,3), nn.ReLU(), nn.Flatten(), nn.Linear(8,2))\nprint(len(list(m.named_modules())))", "import torch\nfrom torch import nn\nm = nn.Sequential(nn.Conv2d(1,2,3), nn.ReLU(), nn.Flatten(), nn.Linear(8,2))\nprint(len(list(m.named_modules())))", ["nn", "inspect"], "code_completion"),
+    ("Save load state_dict", "state-dict-save", "advanced", "Save and reload `state_dict` into fresh module (weights equal).", "import torch\nfrom torch import nn\nm1 = nn.Linear(3,2)\ntorch.save(m1.state_dict(), 'tmp.pt')\nm2 = nn.Linear(3,2)\nm2.load_state_dict(torch.load('tmp.pt', weights_only=True))\nprint(torch.allclose(m1.weight, m2.weight))", "import torch\nfrom torch import nn\nm1 = nn.Linear(3,2)\ntorch.save(m1.state_dict(), 'tmp.pt')\nm2 = nn.Linear(3,2)\nm2.load_state_dict(torch.load('tmp.pt', weights_only=True))\nprint(torch.allclose(m1.weight, m2.weight))", ["nn", "checkpoint"], "code_completion"),
+    ("Build from scratch MLP", "build-mlp-scratch", "advanced", "Build 2-layer MLP class without Sequential (manual forward).", "import torch\nfrom torch import nn\nimport torch.nn.functional as F\nclass MLP(nn.Module):\n    def __init__(self):\n        super().__init__()\n        pass\n    def forward(self, x):\n        pass\nprint(MLP()(torch.randn(2,8)).shape)", "import torch\nfrom torch import nn\nimport torch.nn.functional as F\nclass MLP(nn.Module):\n    def __init__(self):\n        super().__init__()\n        self.fc1 = nn.Linear(8, 16)\n        self.fc2 = nn.Linear(16, 4)\n    def forward(self, x):\n        return self.fc2(F.relu(self.fc1(x)))\nprint(MLP()(torch.randn(2,8)).shape)", ["nn", "build"], "build_from_scratch"),
+]
+
+QUESTIONS = [
+    build_exercise(
+        title=title,
+        slug=slug,
+        difficulty=diff,
+        task=task,
+        starter_code=starter,
+        solution_code=solution,
+        tags=tags,
+        question_type=qtype,
+    )
+    for title, slug, diff, task, starter, solution, tags, qtype in _SPECS
+]
+
+
+async def main() -> None:
+    await seed_questions_for_topic(TOPIC_SLUG, QUESTIONS, "Module 03 — Neural Network Basics")
+
+
+if __name__ == "__main__":
+    asyncio.run(main())

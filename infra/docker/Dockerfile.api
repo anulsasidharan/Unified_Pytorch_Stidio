@@ -1,0 +1,45 @@
+# DSA Studio API — monorepo build
+FROM node:20-alpine AS base
+WORKDIR /app
+
+FROM base AS deps
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/
+RUN npm ci
+
+FROM deps AS builder
+COPY tsconfig.base.json ./
+COPY packages/shared ./packages/shared
+COPY apps/api ./apps/api
+RUN npm run build -w @dsa-studio/shared
+WORKDIR /app/apps/api
+RUN npx prisma generate && npm run build
+
+FROM base AS runner
+RUN apk add --no-cache python3
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY package.json package-lock.json ./
+COPY apps/api/package.json ./apps/api/
+COPY apps/web/package.json ./apps/web/
+COPY packages/shared/package.json ./packages/shared/
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/apps/api/node_modules ./apps/api/node_modules
+COPY --from=builder /app/packages/shared/dist ./packages/shared/dist
+COPY --from=builder /app/packages/shared/package.json ./packages/shared/package.json
+COPY --from=builder /app/apps/api/dist ./apps/api/dist
+COPY --from=builder /app/apps/api/prisma ./apps/api/prisma
+COPY --from=builder /app/apps/api/package.json ./apps/api/package.json
+
+COPY infra/docker/scripts/api-entrypoint.sh ./apps/api/docker-entrypoint.sh
+RUN sed -i 's/\r$//' ./apps/api/docker-entrypoint.sh
+
+WORKDIR /app/apps/api
+EXPOSE 4000
+
+ENTRYPOINT ["sh", "docker-entrypoint.sh"]
