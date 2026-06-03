@@ -257,4 +257,162 @@ export const api = {
 
   clearTutorHistory: (token: string) =>
     request<void>("/tutor/history", { method: "DELETE" }, token),
+
+  importManual: (token: string, body: ManualImportBody) =>
+    request<ImportResponse>("/import/manual", { method: "POST", body: JSON.stringify(body) }, token),
+
+  importJson: (token: string, body: { questions: Record<string, unknown>[]; preview?: boolean }) =>
+    request<ImportResponse>("/import/json", { method: "POST", body: JSON.stringify(body) }, token),
+
+  importCsv: (token: string, file: File, preview = false) =>
+    requestForm<ImportResponse>(
+      `/import/csv?preview=${preview}`,
+      file,
+      token,
+    ),
+
+  importNotebook: (token: string, body: NotebookImportBody) =>
+    request<ImportResponse>(
+      "/import/notebook",
+      { method: "POST", body: JSON.stringify(body) },
+      token,
+    ),
+
+  getImportHistory: (token: string) =>
+    request<ImportHistoryEntry[]>("/import/history", {}, token),
+
+  getCustomQuestions: (token: string | null, params?: { mine?: boolean; community?: boolean }) => {
+    const q = new URLSearchParams();
+    if (params?.mine) q.set("mine", "true");
+    if (params?.community) q.set("community", "true");
+    const qs = q.toString();
+    return request<CustomQuestion[]>(`/custom-questions${qs ? `?${qs}` : ""}`, {}, token);
+  },
+
+  updateCustomQuestion: (token: string, id: number, body: Partial<CustomQuestionUpdate>) =>
+    request<CustomQuestion>(`/custom-questions/${id}`, { method: "PUT", body: JSON.stringify(body) }, token),
+
+  deleteCustomQuestion: (token: string, id: number) =>
+    request<void>(`/custom-questions/${id}`, { method: "DELETE" }, token),
+
+  getNotes: (token: string, params: { question_id?: number; topic_id?: number }) => {
+    const q = new URLSearchParams();
+    if (params.question_id != null) q.set("question_id", String(params.question_id));
+    if (params.topic_id != null) q.set("topic_id", String(params.topic_id));
+    return request<UserNote[]>(`/notes?${q}`, {}, token);
+  },
+
+  createNote: (token: string, body: NoteCreateBody) =>
+    request<UserNote>("/notes", { method: "POST", body: JSON.stringify(body) }, token),
+
+  updateNote: (token: string, id: number, body: Partial<NoteCreateBody>) =>
+    request<UserNote>(`/notes/${id}`, { method: "PUT", body: JSON.stringify(body) }, token),
+
+  deleteNote: (token: string, id: number) =>
+    request<void>(`/notes/${id}`, { method: "DELETE" }, token),
 };
+
+export type ManualImportBody = {
+  title: string;
+  topic_slug?: string;
+  difficulty?: string;
+  problem_statement: string;
+  solution_code?: string;
+  colab_link?: string;
+  tags?: string[];
+  is_shared?: boolean;
+  preview?: boolean;
+};
+
+export type NotebookImportBody = {
+  url: string;
+  topic_slug?: string;
+  title?: string;
+  is_shared?: boolean;
+  preview?: boolean;
+};
+
+export type ImportResponse = {
+  import_source: string;
+  total: number;
+  created: number;
+  failed: number;
+  preview: boolean;
+  items: { title: string; status: string; id: number | null; error: string | null }[];
+  questions?: CustomQuestion[];
+};
+
+export type ImportHistoryEntry = {
+  import_source: string;
+  imported_at: string;
+  questions_count: number;
+  status: string;
+};
+
+export type CustomQuestion = {
+  id: number;
+  title: string;
+  topic_id: number | null;
+  topic_slug: string | null;
+  difficulty: string | null;
+  problem_statement: string;
+  solution_code: string | null;
+  colab_link: string | null;
+  tags: string[] | null;
+  is_shared: boolean;
+  import_source: string | null;
+  created_at: string;
+  author_username: string | null;
+};
+
+export type CustomQuestionUpdate = {
+  title?: string;
+  topic_slug?: string;
+  difficulty?: string;
+  problem_statement?: string;
+  solution_code?: string;
+  colab_link?: string;
+  tags?: string[];
+  is_shared?: boolean;
+};
+
+export type UserNote = {
+  id: number;
+  question_id: number | null;
+  topic_id: number | null;
+  content: string;
+  note_type: string;
+  tags: string[] | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type NoteCreateBody = {
+  content: string;
+  question_id?: number;
+  topic_id?: number;
+  note_type?: string;
+  tags?: string[];
+};
+
+async function requestForm<T>(path: string, file: File, token: string): Promise<T> {
+  const form = new FormData();
+  form.append("file", file);
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: form,
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    let detail = res.statusText;
+    try {
+      const body = await res.json();
+      detail = body.detail ?? detail;
+    } catch {
+      /* ignore */
+    }
+    throw new ApiError(String(detail), res.status);
+  }
+  return res.json() as Promise<T>;
+}

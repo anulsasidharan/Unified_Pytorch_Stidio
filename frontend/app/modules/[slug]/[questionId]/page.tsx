@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { ExerciseClient } from "./ExerciseClient";
 import { LessonPrimer } from "@/components/learn/LessonPrimer";
+import { UserNotes } from "@/components/notes/UserNotes";
 import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { getLessonForQuestion } from "@/lib/lessons";
 import { api } from "@/lib/api";
@@ -80,6 +81,8 @@ export default async function ExercisePage({ params }: Props) {
           expectedOutputShape={question.expected_output_shape}
         />
       </div>
+
+      <UserNotes questionId={question.id} />
     </div>
   );
 }
