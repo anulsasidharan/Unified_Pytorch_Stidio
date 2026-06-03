@@ -54,11 +54,11 @@
 
 | Task | Branch | Status |
 |------|--------|--------|
-| P4-1 · Import APIs (manual, CSV, JSON, notebook) | `feature/import-api` | ❌ Pending |
-| P4-2 · Notebook URL import parser | `feature/notebook-import` | ❌ Pending |
-| P4-3 · Import page UI (4 tabs) | `feature/import-ui` | ❌ Pending |
-| P4-4 · Community questions (`is_shared`) | `feature/community-questions` | ❌ Pending |
-| P4-5 · User notes CRUD | `feature/user-notes` | ❌ Pending |
+| P4-1 · Import APIs (manual, CSV, JSON, notebook) | `feature/import-api` | ✅ Completed |
+| P4-2 · Notebook URL import parser | `feature/notebook-import` | ✅ Completed |
+| P4-3 · Import page UI (4 tabs) | `feature/import-ui` | ✅ Completed |
+| P4-4 · Community questions (`is_shared`) | `feature/community-questions` | ✅ Completed |
+| P4-5 · User notes CRUD | `feature/user-notes` | ✅ Completed |
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Last updated:** 2026-06-03  
 **Specification version:** `rules/CLAUDE.md` v1.0  
-**Repository state:** Phase 3 **complete** — Progress/tracker/revision APIs, XP+SM-2, Celery nightly aggregation, dashboard/tracker/revision UI
+**Repository state:** Phase 4 **complete** — Import APIs (manual/CSV/JSON/notebook), custom questions + community, user notes CRUD, import/community UI
 
 ---
 
@@ -88,11 +88,11 @@
 | 1 | Foundation | **Complete** | Auth, core APIs, seeds M01–03, Next.js `/modules` + exercise page, Colab stub |
 | 2 | Content Expansion | **Complete** | Modules 04–07 (80 Qs), Colab nbformat URLs, ShapeValidator, Anthropic tutor + `/tutor` UI |
 | 3 | Analytics & Tracker | **Complete** | Dashboard, heatmap, Celery cron, XP, SM-2 revision |
-| 4 | Import & Community | Not started | Manual/CSV/JSON/notebook import, community questions |
+| 4 | Import & Community | **Complete** | Import APIs, notebook parser, `/import` + `/community` UI, user notes on exercises |
 | 5 | Remaining Modules & Polish | Not started | Modules 08–13, 500+ exercises, search, dark mode |
 | 6 | Production | Not started | AWS ECS, CloudFront, CI/CD, security audit |
 
-**Active focus:** Phase 4 — Import & Community (see `TASKS.md` P4-*)
+**Active focus:** Phase 5 — Remaining Modules & Polish (see `TASKS.md` P5-*)
 
 ---
 
@@ -128,3 +128,4 @@
 | 2026-06-03 | Phase 1 complete: JWT auth, topics/questions/attempts/colab routers, seeds M02–M03 (+M01), Next.js 14 frontend, pytest API suite |
 | 2026-06-03 | Phase 2 complete: seeds M04–M07, colab_service (nbformat), tutor_service (Anthropic+mock), Monaco editor, ShapeValidator, `/tutor` + in-exercise panel |
 | 2026-06-03 | Phase 3 complete: progress/tracker/revision routers, XP+SM-2 services, Celery beat, dashboard/tracker/revision UI (Recharts) |
+| 2026-06-03 | Phase 4 complete: import_service + import_/notes routers, custom-questions CRUD, community browser, import page (4 tabs), UserNotes on exercise page |

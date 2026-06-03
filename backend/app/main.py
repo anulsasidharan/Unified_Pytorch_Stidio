@@ -9,6 +9,8 @@ from app.routers import (
     attempts,
     auth,
     colab,
+    import_,
+    notes,
     progress,
     questions,
     revision,
@@ -52,6 +54,8 @@ api_router.include_router(tutor.router)
 api_router.include_router(progress.router)
 api_router.include_router(tracker.router)
 api_router.include_router(revision.router)
+api_router.include_router(import_.router)
+api_router.include_router(notes.router)
 app.include_router(api_router)
 
 

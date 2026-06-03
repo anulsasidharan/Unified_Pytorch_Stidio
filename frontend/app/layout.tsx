@@ -35,6 +35,12 @@ export default function RootLayout({
             <Link href="/revision" className="text-slate-400 hover:text-white">
               Revision
             </Link>
+            <Link href="/import" className="text-slate-400 hover:text-white">
+              Import
+            </Link>
+            <Link href="/community" className="text-slate-400 hover:text-white">
+              Community
+            </Link>
             <Link href="/login" className="ml-auto text-slate-400 hover:text-white">
               Login
             </Link>
