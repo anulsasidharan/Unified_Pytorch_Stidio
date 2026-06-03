@@ -79,6 +79,7 @@ export default async function ExercisePage({ params }: Props) {
           colabLink={question.colab_link}
           questionType={question.question_type}
           expectedOutputShape={question.expected_output_shape}
+          hints={question.hints}
         />
       </div>
 

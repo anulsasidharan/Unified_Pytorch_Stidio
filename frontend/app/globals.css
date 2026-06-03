@@ -2,16 +2,53 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --bg: #020617;
+  --header-bg: rgba(15, 23, 42, 0.85);
+  --card-bg: rgba(15, 23, 42, 0.5);
+  --input-bg: #0f172a;
+  --border: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+}
+
+html.light {
+  --bg: #f8fafc;
+  --header-bg: rgba(248, 250, 252, 0.9);
+  --card-bg: #ffffff;
+  --input-bg: #ffffff;
+  --border: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+}
+
+html.dark {
+  --bg: #020617;
+  --header-bg: rgba(15, 23, 42, 0.85);
+  --card-bg: rgba(15, 23, 42, 0.5);
+  --input-bg: #0f172a;
+  --border: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+}
+
 body {
-  @apply bg-slate-950 text-slate-100 antialiased;
+  @apply antialiased;
+  background-color: var(--bg);
+  color: var(--text-primary);
 }
 
 .prose-problem h2 {
-  @apply text-xl font-semibold text-white mb-3;
+  @apply text-xl font-semibold mb-3;
+  color: var(--text-primary);
 }
 
 .prose-problem p {
-  @apply text-slate-300 mb-2 leading-relaxed;
+  @apply mb-2 leading-relaxed;
+  color: var(--text-secondary);
 }
 
 .prose-tutor p {
@@ -19,9 +56,10 @@ body {
 }
 
 .prose-tutor pre {
-  @apply my-2 overflow-x-auto rounded-lg bg-slate-950 p-3 text-xs;
+  @apply my-2 overflow-x-auto rounded-lg p-3 text-xs;
+  background: var(--input-bg);
 }
 
 .prose-tutor code {
-  @apply font-mono text-indigo-200;
+  @apply font-mono text-indigo-500 dark:text-indigo-200;
 }

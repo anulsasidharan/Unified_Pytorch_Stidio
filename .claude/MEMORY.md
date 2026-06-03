@@ -4,7 +4,7 @@
 
 **Last updated:** 2026-06-03  
 **Specification version:** `rules/CLAUDE.md` v1.0  
-**Repository state:** Phase 4 **complete** — Import APIs (manual/CSV/JSON/notebook), custom questions + community, user notes CRUD, import/community UI
+**Repository state:** Phase 5 **complete** — Modules 08–13 seeded, bulk expansion (~520 exercises), search UI/API, editor shortcuts, dark mode, responsive nav
 
 ---
 
@@ -89,10 +89,10 @@
 | 2 | Content Expansion | **Complete** | Modules 04–07 (80 Qs), Colab nbformat URLs, ShapeValidator, Anthropic tutor + `/tutor` UI |
 | 3 | Analytics & Tracker | **Complete** | Dashboard, heatmap, Celery cron, XP, SM-2 revision |
 | 4 | Import & Community | **Complete** | Import APIs, notebook parser, `/import` + `/community` UI, user notes on exercises |
-| 5 | Remaining Modules & Polish | Not started | Modules 08–13, 500+ exercises, search, dark mode |
+| 5 | Remaining Modules & Polish | **Complete** | M08–13 seeds, bulk_expand to 40/module, `/exercises` search, Ctrl+Enter/Ctrl+H, theme toggle, mobile nav |
 | 6 | Production | Not started | AWS ECS, CloudFront, CI/CD, security audit |
 
-**Active focus:** Phase 5 — Remaining Modules & Polish (see `TASKS.md` P5-*)
+**Active focus:** Phase 6 — Production (see `TASKS.md` P6-*)
 
 ---
 
@@ -129,3 +129,4 @@
 | 2026-06-03 | Phase 2 complete: seeds M04–M07, colab_service (nbformat), tutor_service (Anthropic+mock), Monaco editor, ShapeValidator, `/tutor` + in-exercise panel |
 | 2026-06-03 | Phase 3 complete: progress/tracker/revision routers, XP+SM-2 services, Celery beat, dashboard/tracker/revision UI (Recharts) |
 | 2026-06-03 | Phase 4 complete: import_service + import_/notes routers, custom-questions CRUD, community browser, import page (4 tabs), UserNotes on exercise page |
+| 2026-06-03 | Phase 5 complete: questions_modules_08_13 + bulk_expand seeds, GET /questions/search, /exercises page, HintDrawer + shortcuts, ThemeProvider + AppHeader |

@@ -66,11 +66,11 @@
 
 | Task | Branch | Status |
 |------|--------|--------|
-| P5-1 · Seed Modules 08–13 questions | `feature/seed-modules-08-13` | ❌ Pending |
-| P5-2 · Search & filter across exercises | `feature/search-filter` | ❌ Pending |
-| P5-3 · Keyboard shortcuts in editor | `feature/editor-shortcuts` | ❌ Pending |
-| P5-4 · Mobile-responsive layout | `feature/responsive` | ❌ Pending |
-| P5-5 · Dark mode | `feature/dark-mode` | ❌ Pending |
+| P5-1 · Seed Modules 08–13 questions | `feature/seed-modules-08-13` | ✅ Completed |
+| P5-2 · Search & filter across exercises | `feature/search-filter` | ✅ Completed |
+| P5-3 · Keyboard shortcuts in editor | `feature/editor-shortcuts` | ✅ Completed |
+| P5-4 · Mobile-responsive layout | `feature/responsive` | ✅ Completed |
+| P5-5 · Dark mode | `feature/dark-mode` | ✅ Completed |
 
 ---
 
