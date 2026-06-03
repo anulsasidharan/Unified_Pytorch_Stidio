@@ -1,6 +1,6 @@
-"""Submission and attempt history routes (Phase 1 stub — records attempts, no remote grading)."""
+"""Submission and attempt history routes."""
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -10,10 +10,9 @@ from app.models.attempt import UserAttempt
 from app.models.question import Question
 from app.models.user import User
 from app.schemas.questions import AttemptResponse, AttemptSubmit
+from app.services.progress_service import process_attempt_submission
 
 router = APIRouter(prefix="/attempts", tags=["attempts"])
-
-XP_BY_DIFFICULTY = {"basic": 10, "intermediate": 20, "advanced": 30}
 
 
 @router.post("", response_model=AttemptResponse, status_code=201)
@@ -25,8 +24,6 @@ async def submit_attempt(
     result = await db.execute(select(Question).where(Question.id == body.question_id))
     question = result.scalar_one_or_none()
     if question is None:
-        from fastapi import HTTPException, status
-
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
 
     count_result = await db.execute(
@@ -36,25 +33,34 @@ async def submit_attempt(
     )
     attempt_number = count_result.scalar_one() + 1
 
+    side_effects = await process_attempt_submission(
+        db,
+        user,
+        question,
+        result=body.result,
+        hints_used=body.hints_used,
+        time_spent_secs=body.time_spent_secs,
+    )
+
     attempt = UserAttempt(
         user_id=user.id,
         question_id=body.question_id,
         submitted_code=body.code,
         result=body.result,
         time_spent_secs=body.time_spent_secs,
+        hints_used=body.hints_used,
         attempt_number=attempt_number,
     )
     db.add(attempt)
     await db.commit()
     await db.refresh(attempt)
 
-    xp = XP_BY_DIFFICULTY.get(question.difficulty, 10) if body.result == "correct" else 0
-
     return AttemptResponse(
         id=attempt.id,
         result=body.result,
-        xp_earned=xp,
-        added_to_revision=body.result == "correct",
+        xp_earned=side_effects["xp_earned"],
+        added_to_revision=side_effects["added_to_revision"],
+        message="Attempt recorded",
     )
 
 

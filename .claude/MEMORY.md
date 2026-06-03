@@ -4,7 +4,7 @@
 
 **Last updated:** 2026-06-03  
 **Specification version:** `rules/CLAUDE.md` v1.0  
-**Repository state:** Phase 2 **complete** — Modules 04–07 seeded (80 exercises), Colab notebook generation, ShapeValidator, Monaco+snippets, AI tutor API+UI
+**Repository state:** Phase 3 **complete** — Progress/tracker/revision APIs, XP+SM-2, Celery nightly aggregation, dashboard/tracker/revision UI
 
 ---
 
@@ -87,12 +87,12 @@
 |-------|------|--------|-------|
 | 1 | Foundation | **Complete** | Auth, core APIs, seeds M01–03, Next.js `/modules` + exercise page, Colab stub |
 | 2 | Content Expansion | **Complete** | Modules 04–07 (80 Qs), Colab nbformat URLs, ShapeValidator, Anthropic tutor + `/tutor` UI |
-| 3 | Analytics & Tracker | Not started | Dashboard, heatmap, Celery cron, XP, SM-2 revision |
+| 3 | Analytics & Tracker | **Complete** | Dashboard, heatmap, Celery cron, XP, SM-2 revision |
 | 4 | Import & Community | Not started | Manual/CSV/JSON/notebook import, community questions |
 | 5 | Remaining Modules & Polish | Not started | Modules 08–13, 500+ exercises, search, dark mode |
 | 6 | Production | Not started | AWS ECS, CloudFront, CI/CD, security audit |
 
-**Active focus:** Phase 3 — Analytics & Tracker (see `TASKS.md` P3-*)
+**Active focus:** Phase 4 — Import & Community (see `TASKS.md` P4-*)
 
 ---
 
@@ -127,3 +127,4 @@
 | 2026-06-03 | Phase 1 backend foundation: 11 ORM models, Alembic `001_initial_schema`, docker-compose (PG16/Redis7/FastAPI), `.env`, 13 topics + 19 Module-01 questions seeded, `/health` verified |
 | 2026-06-03 | Phase 1 complete: JWT auth, topics/questions/attempts/colab routers, seeds M02–M03 (+M01), Next.js 14 frontend, pytest API suite |
 | 2026-06-03 | Phase 2 complete: seeds M04–M07, colab_service (nbformat), tutor_service (Anthropic+mock), Monaco editor, ShapeValidator, `/tutor` + in-exercise panel |
+| 2026-06-03 | Phase 3 complete: progress/tracker/revision routers, XP+SM-2 services, Celery beat, dashboard/tracker/revision UI (Recharts) |

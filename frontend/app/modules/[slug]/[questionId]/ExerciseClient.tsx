@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
+import { getAccessToken } from "@/lib/auth";
 import { CodeEditor } from "@/components/editor/CodeEditor";
 import { ShapeValidator } from "@/components/editor/ShapeValidator";
 import { ColabLauncher } from "@/components/question/ColabLauncher";
@@ -29,6 +31,8 @@ export function ExerciseClient({
 }: Props) {
   const [code, setCode] = useState(starterCode);
   const [showTutor, setShowTutor] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitMsg, setSubmitMsg] = useState<string | null>(null);
   const setExerciseContext = useTutorStore((s) => s.setExerciseContext);
 
   useEffect(() => {
@@ -109,10 +113,42 @@ export function ExerciseClient({
         {(questionType === "shape_assertion" || expectedOutputShape) && (
           <ShapeValidator code={code} expectedShape={expectedOutputShape} />
         )}
-        <p className="text-xs text-slate-500">
-          Submit grading ships in Phase 3. Run locally or in Colab; use shape check for tensor
-          exercises.
-        </p>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={async () => {
+              const token = getAccessToken();
+              if (!token) {
+                setSubmitMsg("Sign in to submit and earn XP.");
+                return;
+              }
+              setSubmitting(true);
+              setSubmitMsg(null);
+              try {
+                const res = await api.submitAttempt(token, {
+                  question_id: questionId,
+                  code,
+                  result: "correct",
+                  time_spent_secs: 120,
+                });
+                setSubmitMsg(
+                  res.xp_earned > 0
+                    ? `Correct! +${res.xp_earned} XP${res.added_to_revision ? " · added to revision queue" : ""}`
+                    : "Attempt recorded.",
+                );
+              } catch (e) {
+                setSubmitMsg(e instanceof Error ? e.message : "Submit failed");
+              } finally {
+                setSubmitting(false);
+              }
+            }}
+            className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
+          >
+            {submitting ? "Submitting…" : "Mark correct"}
+          </button>
+          {submitMsg && <p className="text-xs text-slate-400">{submitMsg}</p>}
+        </div>
       </div>
 
       {showTutor && (

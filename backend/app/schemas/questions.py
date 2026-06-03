@@ -68,6 +68,7 @@ class AttemptSubmit(BaseModel):
     code: str | None = None
     result: str
     time_spent_secs: int = 0
+    hints_used: int = 0
 
 
 class AttemptResponse(BaseModel):
@@ -77,4 +78,4 @@ class AttemptResponse(BaseModel):
     runtime_ms: int | None = None
     error_message: str | None = None
     added_to_revision: bool = False
-    message: str = "Attempt recorded (grading deferred to Phase 2)"
+    message: str = "Attempt recorded"
