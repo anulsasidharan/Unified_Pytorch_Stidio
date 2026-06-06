@@ -142,7 +142,7 @@ async def main_async(seed_questions_flag: bool) -> int:
     print(f"ensure_topics: {added} topic(s) added, {removed} duplicate(s) deactivated.")
 
     if seed_questions_flag:
-        print("=== Seeding Python questions (modules 01-05) ===")
+        print("=== Seeding Python questions + snippets (modules 01-25) ===")
         await seed_questions()
 
     print("=== Verifying Phase 1 database state ===")

@@ -1,0 +1,1402 @@
+[
+  {
+    "title": "Hello Print",
+    "slug": "snip-python-basics-hello-print",
+    "description": "Python Basics: Minimal print greeting",
+    "code": "print(\"Hello, Python!\")",
+    "topic_slug": "python-basics",
+    "tags": [
+      "python",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": true
+  },
+  {
+    "title": "Main Guard",
+    "slug": "snip-python-basics-main-guard",
+    "description": "Python Basics: Standard script entry pattern",
+    "code": "def main():\n    print(\"running\")\n\nif __name__ == \"__main__\":\n    main()",
+    "topic_slug": "python-basics",
+    "tags": [
+      "python",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Comment Style",
+    "slug": "snip-python-basics-comment-style",
+    "description": "Python Basics: Inline and block comments",
+    "code": "# single-line comment\n\"\"\"Docstring-style block\"\"\"\nprint(\"ok\")",
+    "topic_slug": "python-basics",
+    "tags": [
+      "python",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "REPL Expression",
+    "slug": "snip-python-basics-repl-expr",
+    "description": "Python Basics: Evaluate and display expression",
+    "code": "result = 2 + 3\nprint(result)",
+    "topic_slug": "python-basics",
+    "tags": [
+      "python",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Type Check",
+    "slug": "snip-variables-types-type-check",
+    "description": "Variables & Types: Inspect object type",
+    "code": "value = 42\nprint(type(value).__name__)",
+    "topic_slug": "variables-types",
+    "tags": [
+      "variables",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Truthy Falsy",
+    "slug": "snip-variables-types-truthy-falsy",
+    "description": "Variables & Types: Check truthiness of values",
+    "code": "print(bool(0), bool(\"\"), bool([1]))",
+    "topic_slug": "variables-types",
+    "tags": [
+      "variables",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "None Check",
+    "slug": "snip-variables-types-none-check",
+    "description": "Variables & Types: Compare with None safely",
+    "code": "x = None\nprint(x is None)",
+    "topic_slug": "variables-types",
+    "tags": [
+      "variables",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Swap Variables",
+    "slug": "snip-variables-types-swap-vars",
+    "description": "Variables & Types: Tuple unpacking swap",
+    "code": "a, b = 1, 2\na, b = b, a\nprint(a, b)",
+    "topic_slug": "variables-types",
+    "tags": [
+      "variables",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "F-String Format",
+    "slug": "snip-strings-fstring",
+    "description": "Strings: Embed variables in strings",
+    "code": "name = \"Ada\"\nprint(f\"Hello, {name}!\")",
+    "topic_slug": "strings",
+    "tags": [
+      "strings",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": true
+  },
+  {
+    "title": "Split and Join",
+    "slug": "snip-strings-split-join",
+    "description": "Strings: Tokenize and rejoin",
+    "code": "parts = \"a,b,c\".split(\",\")\nprint(\"-\".join(parts))",
+    "topic_slug": "strings",
+    "tags": [
+      "strings",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Strip Whitespace",
+    "slug": "snip-strings-strip-text",
+    "description": "Strings: Clean user input",
+    "code": "text = \"  hello  \"\nprint(text.strip())",
+    "topic_slug": "strings",
+    "tags": [
+      "strings",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "String Slice",
+    "slug": "snip-strings-slice-string",
+    "description": "Strings: Extract substring",
+    "code": "word = \"Python\"\nprint(word[0:3])",
+    "topic_slug": "strings",
+    "tags": [
+      "strings",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "If Elif Else",
+    "slug": "snip-control-flow-if-elif-else",
+    "description": "Control Flow: Branch on score",
+    "code": "score = 85\nif score >= 90:\n    grade = \"A\"\nelif score >= 80:\n    grade = \"B\"\nelse:\n    grade = \"C\"\nprint(grade)",
+    "topic_slug": "control-flow",
+    "tags": [
+      "control",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Ternary Expression",
+    "slug": "snip-control-flow-ternary",
+    "description": "Control Flow: Compact conditional",
+    "code": "n = 4\nlabel = \"even\" if n % 2 == 0 else \"odd\"\nprint(label)",
+    "topic_slug": "control-flow",
+    "tags": [
+      "control",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Match Case",
+    "slug": "snip-control-flow-match-case",
+    "description": "Control Flow: Pattern matching status",
+    "code": "status = 404\nmatch status:\n    case 200:\n        print(\"ok\")\n    case 404:\n        print(\"not found\")\n    case _:\n        print(\"other\")",
+    "topic_slug": "control-flow",
+    "tags": [
+      "control",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Guard Clause",
+    "slug": "snip-control-flow-guard-clause",
+    "description": "Control Flow: Early return pattern",
+    "code": "def parse(value):\n    if value is None:\n        return \"missing\"\n    return value.upper()\nprint(parse(None))",
+    "topic_slug": "control-flow",
+    "tags": [
+      "control",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "For Range",
+    "slug": "snip-loops-for-range",
+    "description": "Loops: Iterate with range",
+    "code": "total = 0\nfor i in range(1, 4):\n    total += i\nprint(total)",
+    "topic_slug": "loops",
+    "tags": [
+      "loops",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "While Break",
+    "slug": "snip-loops-while-break",
+    "description": "Loops: Exit loop early",
+    "code": "n = 0\nwhile True:\n    n += 1\n    if n == 3:\n        break\nprint(n)",
+    "topic_slug": "loops",
+    "tags": [
+      "loops",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Enumerate Zip",
+    "slug": "snip-loops-enumerate-zip",
+    "description": "Loops: Parallel iteration",
+    "code": "names = [\"a\", \"b\"]\nscores = [10, 20]\nfor i, (n, s) in enumerate(zip(names, scores)):\n    print(i, n, s)",
+    "topic_slug": "loops",
+    "tags": [
+      "loops",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Comprehension Sum",
+    "slug": "snip-loops-comprehension-sum",
+    "description": "Loops: Sum squares",
+    "code": "nums = [1, 2, 3, 4]\nprint(sum(x * x for x in nums))",
+    "topic_slug": "loops",
+    "tags": [
+      "loops",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "List Append",
+    "slug": "snip-lists-tuples-list-append",
+    "description": "Lists & Tuples: Grow a list",
+    "code": "items = []\nitems.append(\"task\")\nprint(items)",
+    "topic_slug": "lists-tuples",
+    "tags": [
+      "lists",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "List Slice",
+    "slug": "snip-lists-tuples-list-slice",
+    "description": "Lists & Tuples: Copy sublist",
+    "code": "data = [0, 1, 2, 3, 4]\nprint(data[1:4])",
+    "topic_slug": "lists-tuples",
+    "tags": [
+      "lists",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Tuple Unpack",
+    "slug": "snip-lists-tuples-tuple-unpack",
+    "description": "Lists & Tuples: Unpack coordinates",
+    "code": "point = (3, 4)\nx, y = point\nprint(x + y)",
+    "topic_slug": "lists-tuples",
+    "tags": [
+      "lists",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Sorted Key",
+    "slug": "snip-lists-tuples-sorted-key",
+    "description": "Lists & Tuples: Sort by length",
+    "code": "words = [\"pear\", \"fig\", \"apple\"]\nprint(sorted(words, key=len))",
+    "topic_slug": "lists-tuples",
+    "tags": [
+      "lists",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Dict Get Default",
+    "slug": "snip-dicts-sets-dict-get",
+    "description": "Dicts & Sets: Safe lookup",
+    "code": "user = {\"name\": \"Ana\"}\nprint(user.get(\"role\", \"guest\"))",
+    "topic_slug": "dicts-sets",
+    "tags": [
+      "dicts",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Dict Comprehension",
+    "slug": "snip-dicts-sets-dict-comp",
+    "description": "Dicts & Sets: Square mapping",
+    "code": "print({x: x * x for x in range(4)})",
+    "topic_slug": "dicts-sets",
+    "tags": [
+      "dicts",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Set Operations",
+    "slug": "snip-dicts-sets-set-ops",
+    "description": "Dicts & Sets: Union and intersection",
+    "code": "a, b = {1, 2}, {2, 3}\nprint(sorted(a | b), sorted(a & b))",
+    "topic_slug": "dicts-sets",
+    "tags": [
+      "dicts",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Counter Pattern",
+    "slug": "snip-dicts-sets-counter-pattern",
+    "description": "Dicts & Sets: Count occurrences",
+    "code": "from collections import Counter\nc = Counter(\"banana\")\nprint(dict(c))",
+    "topic_slug": "dicts-sets",
+    "tags": [
+      "dicts",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Default Argument",
+    "slug": "snip-functions-default-arg",
+    "description": "Functions: Function with default",
+    "code": "def greet(name=\"world\"):\n    return f\"hi {name}\"\nprint(greet())",
+    "topic_slug": "functions",
+    "tags": [
+      "functions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Args Kwargs",
+    "slug": "snip-functions-args-kwargs",
+    "description": "Functions: Variadic function",
+    "code": "def total(*nums):\n    return sum(nums)\nprint(total(1, 2, 3))",
+    "topic_slug": "functions",
+    "tags": [
+      "functions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Lambda Sort",
+    "slug": "snip-functions-lambda-sort",
+    "description": "Functions: Sort pairs by second item",
+    "code": "pairs = [(\"b\", 2), (\"a\", 1)]\nprint(sorted(pairs, key=lambda p: p[1]))",
+    "topic_slug": "functions",
+    "tags": [
+      "functions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Partial Function",
+    "slug": "snip-functions-partial-fn",
+    "description": "Functions: Pre-fill arguments",
+    "code": "from functools import partial\nadd5 = partial(lambda a, b: a + b, 5)\nprint(add5(3))",
+    "topic_slug": "functions",
+    "tags": [
+      "functions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Basic Class",
+    "slug": "snip-oop-basic-class",
+    "description": "OOP: Simple data class",
+    "code": "class User:\n    def __init__(self, name):\n        self.name = name\nprint(User(\"Ada\").name)",
+    "topic_slug": "oop",
+    "tags": [
+      "oop",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Class Method",
+    "slug": "snip-oop-classmethod",
+    "description": "OOP: Alternative constructor",
+    "code": "class Point:\n    def __init__(self, x, y):\n        self.x, self.y = x, y\n    @classmethod\n    def origin(cls):\n        return cls(0, 0)\nprint(Point.origin().x)",
+    "topic_slug": "oop",
+    "tags": [
+      "oop",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Property Getter",
+    "slug": "snip-oop-property-getter",
+    "description": "OOP: Computed attribute",
+    "code": "class Circle:\n    def __init__(self, r):\n        self.r = r\n    @property\n    def area(self):\n        return 3.14 * self.r ** 2\nprint(Circle(2).area)",
+    "topic_slug": "oop",
+    "tags": [
+      "oop",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Inheritance Super",
+    "slug": "snip-oop-inherit-super",
+    "description": "OOP: Extend parent class",
+    "code": "class Animal:\n    def speak(self):\n        return \"...\"\nclass Dog(Animal):\n    def speak(self):\n        return super().speak() + \" woof\"\nprint(Dog().speak())",
+    "topic_slug": "oop",
+    "tags": [
+      "oop",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Repr and Str",
+    "slug": "snip-dunder-methods-repr-str",
+    "description": "Dunder Methods: Object string forms",
+    "code": "class Item:\n    def __init__(self, name):\n        self.name = name\n    def __repr__(self):\n        return f\"Item({self.name!r})\"\nprint(repr(Item(\"book\")))",
+    "topic_slug": "dunder-methods",
+    "tags": [
+      "dunder",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Len and Eq",
+    "slug": "snip-dunder-methods-len-eq",
+    "description": "Dunder Methods: Rich comparison basics",
+    "code": "class Box:\n    def __init__(self, n):\n        self.n = n\n    def __len__(self):\n        return self.n\n    def __eq__(self, other):\n        return isinstance(other, Box) and self.n == other.n\nprint(len(Box(3)), Box(2) == Box(2))",
+    "topic_slug": "dunder-methods",
+    "tags": [
+      "dunder",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Get Item",
+    "slug": "snip-dunder-methods-getitem",
+    "description": "Dunder Methods: Indexable object",
+    "code": "class Tags:\n    def __init__(self, items):\n        self.items = items\n    def __getitem__(self, i):\n        return self.items[i]\nprint(Tags([\"a\", \"b\"])[1])",
+    "topic_slug": "dunder-methods",
+    "tags": [
+      "dunder",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Context Manager",
+    "slug": "snip-dunder-methods-context-manager",
+    "description": "Dunder Methods: Resource cleanup",
+    "code": "class Managed:\n    def __enter__(self):\n        print(\"open\")\n        return self\n    def __exit__(self, *args):\n        print(\"close\")\nwith Managed():\n    pass",
+    "topic_slug": "dunder-methods",
+    "tags": [
+      "dunder",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Import Alias",
+    "slug": "snip-modules-packages-import-alias",
+    "description": "Modules & Packages: Short module alias",
+    "code": "import json as js\nprint(js.dumps({\"ok\": True}))",
+    "topic_slug": "modules-packages",
+    "tags": [
+      "modules",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "From Import",
+    "slug": "snip-modules-packages-from-import",
+    "description": "Modules & Packages: Import specific name",
+    "code": "from math import sqrt\nprint(round(sqrt(9), 2))",
+    "topic_slug": "modules-packages",
+    "tags": [
+      "modules",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Dunder All",
+    "slug": "snip-modules-packages-dunder-all",
+    "description": "Modules & Packages: Public API list",
+    "code": "__all__ = [\"add\"]\ndef add(a, b):\n    return a + b\nprint(__all__)",
+    "topic_slug": "modules-packages",
+    "tags": [
+      "modules",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Importlib Reload",
+    "slug": "snip-modules-packages-importlib-reload",
+    "description": "Modules & Packages: Reload module in REPL",
+    "code": "import importlib\nprint(hasattr(importlib, \"reload\"))",
+    "topic_slug": "modules-packages",
+    "tags": [
+      "modules",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Write Read Text",
+    "slug": "snip-file-io-write-read-text",
+    "description": "File I/O: Basic text file I/O",
+    "code": "from io import StringIO\nbuf = StringIO()\nbuf.write(\"line\\n\")\nbuf.seek(0)\nprint(buf.read().strip())",
+    "topic_slug": "file-io",
+    "tags": [
+      "file",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Pathlib Join",
+    "slug": "snip-file-io-pathlib-join",
+    "description": "File I/O: Build paths safely",
+    "code": "from pathlib import Path\np = Path(\"data\") / \"app.json\"\nprint(p.as_posix())",
+    "topic_slug": "file-io",
+    "tags": [
+      "file",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "JSON Loads",
+    "slug": "snip-file-io-json-loads",
+    "description": "File I/O: Parse JSON string",
+    "code": "import json\nprint(json.loads('{\"x\": 1}')[\"x\"])",
+    "topic_slug": "file-io",
+    "tags": [
+      "file",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "CSV Row",
+    "slug": "snip-file-io-csv-row",
+    "description": "File I/O: Parse CSV line",
+    "code": "import csv\nfrom io import StringIO\nrow = next(csv.reader(StringIO(\"a,1\\n\")))\nprint(row)",
+    "topic_slug": "file-io",
+    "tags": [
+      "file",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Try Except",
+    "slug": "snip-exceptions-try-except",
+    "description": "Exceptions: Handle ValueError",
+    "code": "try:\n    int(\"x\")\nexcept ValueError:\n    print(\"bad number\")",
+    "topic_slug": "exceptions",
+    "tags": [
+      "exceptions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Raise Custom",
+    "slug": "snip-exceptions-raise-custom",
+    "description": "Exceptions: Custom exception",
+    "code": "class AppError(Exception):\n    pass\ntry:\n    raise AppError(\"fail\")\nexcept AppError as e:\n    print(type(e).__name__)",
+    "topic_slug": "exceptions",
+    "tags": [
+      "exceptions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Else Finally",
+    "slug": "snip-exceptions-else-finally",
+    "description": "Exceptions: Complete try structure",
+    "code": "try:\n    ok = True\nexcept Exception:\n    ok = False\nelse:\n    print(\"success\" if ok else \"fail\")\nfinally:\n    print(\"done\")",
+    "topic_slug": "exceptions",
+    "tags": [
+      "exceptions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Logging Basic",
+    "slug": "snip-exceptions-logging-basic",
+    "description": "Exceptions: Log info message",
+    "code": "import logging\nlogging.basicConfig(level=logging.INFO)\nlogging.info(\"started\")",
+    "topic_slug": "exceptions",
+    "tags": [
+      "exceptions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Iter Next",
+    "slug": "snip-iterators-generators-iter-next",
+    "description": "Iterators & Generators: Manual iteration",
+    "code": "it = iter([1, 2])\nprint(next(it), next(it))",
+    "topic_slug": "iterators-generators",
+    "tags": [
+      "iterators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Yield Generator",
+    "slug": "snip-iterators-generators-yield-gen",
+    "description": "Iterators & Generators: Simple generator",
+    "code": "def count_to(n):\n    for i in range(1, n + 1):\n        yield i\nprint(list(count_to(3)))",
+    "topic_slug": "iterators-generators",
+    "tags": [
+      "iterators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Generator Expression",
+    "slug": "snip-iterators-generators-gen-expression",
+    "description": "Iterators & Generators: Lazy filtering",
+    "code": "nums = (x * x for x in range(4) if x % 2)\nprint(list(nums))",
+    "topic_slug": "iterators-generators",
+    "tags": [
+      "iterators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Itertools Chain",
+    "slug": "snip-iterators-generators-itertools-chain",
+    "description": "Iterators & Generators: Flatten iterables",
+    "code": "from itertools import chain\nprint(list(chain([1, 2], [3])))",
+    "topic_slug": "iterators-generators",
+    "tags": [
+      "iterators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Simple Decorator",
+    "slug": "snip-decorators-simple-decorator",
+    "description": "Decorators: Wrap function call",
+    "code": "def logged(fn):\n    def wrapper(*a, **k):\n        print(\"call\")\n        return fn(*a, **k)\n    return wrapper\n@logged\ndef add(a, b):\n    return a + b\nprint(add(1, 2))",
+    "topic_slug": "decorators",
+    "tags": [
+      "decorators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Wraps Decorator",
+    "slug": "snip-decorators-wraps-decorator",
+    "description": "Decorators: Preserve metadata",
+    "code": "from functools import wraps\ndef tag(name):\n    def deco(fn):\n        @wraps(fn)\n        def wrapper(*a, **k):\n            return fn(*a, **k)\n        return wrapper\n    return deco\n@tag(\"demo\")\ndef work():\n    \"\"\"docs\"\"\"\n    return 1\nprint(work.__name__)",
+    "topic_slug": "decorators",
+    "tags": [
+      "decorators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "LRU Cache",
+    "slug": "snip-decorators-lru-cache",
+    "description": "Decorators: Memoize calls",
+    "code": "from functools import lru_cache\n@lru_cache\ndef fib(n):\n    return n if n < 2 else fib(n - 1) + fib(n - 2)\nprint(fib(10))",
+    "topic_slug": "decorators",
+    "tags": [
+      "decorators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Decorator Args",
+    "slug": "snip-decorators-decorator-args",
+    "description": "Decorators: Parameterized decorator",
+    "code": "def repeat(n):\n    def deco(fn):\n        def wrapper(*a, **k):\n            return [fn(*a, **k) for _ in range(n)]\n        return wrapper\n    return deco\n@repeat(2)\ndef hi():\n    return \"hi\"\nprint(hi())",
+    "topic_slug": "decorators",
+    "tags": [
+      "decorators",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Map Filter",
+    "slug": "snip-functional-map-filter",
+    "description": "Functional: Transform and filter",
+    "code": "nums = [1, 2, 3, 4]\nprint(list(map(lambda x: x * 2, filter(lambda x: x % 2 == 0, nums))))",
+    "topic_slug": "functional",
+    "tags": [
+      "functional",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Reduce Sum",
+    "slug": "snip-functional-reduce-sum",
+    "description": "Functional: Fold with reduce",
+    "code": "from functools import reduce\nprint(reduce(lambda a, b: a + b, [1, 2, 3, 4]))",
+    "topic_slug": "functional",
+    "tags": [
+      "functional",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Itemgetter Sort",
+    "slug": "snip-functional-operator-itemgetter",
+    "description": "Functional: Sort records by key",
+    "code": "from operator import itemgetter\nrows = [(\"b\", 2), (\"a\", 1)]\nprint(sorted(rows, key=itemgetter(1)))",
+    "topic_slug": "functional",
+    "tags": [
+      "functional",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Pure Function",
+    "slug": "snip-functional-pure-function",
+    "description": "Functional: No side effects",
+    "code": "def add_tax(price, rate=0.1):\n    return round(price * (1 + rate), 2)\nprint(add_tax(10))",
+    "topic_slug": "functional",
+    "tags": [
+      "functional",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "List Comprehension",
+    "slug": "snip-comprehensions-list-comp",
+    "description": "Comprehensions: Filter and map",
+    "code": "print([x for x in range(6) if x % 2 == 0])",
+    "topic_slug": "comprehensions",
+    "tags": [
+      "comprehensions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": true
+  },
+  {
+    "title": "Dict Comprehension",
+    "slug": "snip-comprehensions-dict-comp",
+    "description": "Comprehensions: Build lookup table",
+    "code": "print({c: ord(c) for c in \"ab\"})",
+    "topic_slug": "comprehensions",
+    "tags": [
+      "comprehensions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Set Comprehension",
+    "slug": "snip-comprehensions-set-comp",
+    "description": "Comprehensions: Unique transformed values",
+    "code": "print({len(w) for w in [\"a\", \"bb\", \"a\"]})",
+    "topic_slug": "comprehensions",
+    "tags": [
+      "comprehensions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Walrus in Loop",
+    "slug": "snip-comprehensions-walrus-comp",
+    "description": "Comprehensions: Assign inside condition",
+    "code": "data = [1, 2, 3, 4]\nif (n := len(data)) > 2:\n    print(n)",
+    "topic_slug": "comprehensions",
+    "tags": [
+      "comprehensions",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Basic Hints",
+    "slug": "snip-type-hints-basic-hints",
+    "description": "Type Hints: Annotate args and return",
+    "code": "def add(a: int, b: int) -> int:\n    return a + b\nprint(add(2, 3))",
+    "topic_slug": "type-hints",
+    "tags": [
+      "type",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Optional Hint",
+    "slug": "snip-type-hints-optional-hint",
+    "description": "Type Hints: Optional parameter",
+    "code": "from typing import Optional\ndef greet(name: Optional[str] = None) -> str:\n    return f\"hi {name or 'guest'}\"\nprint(greet())",
+    "topic_slug": "type-hints",
+    "tags": [
+      "type",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "List Dict Hints",
+    "slug": "snip-type-hints-list-dict-hints",
+    "description": "Type Hints: Container annotations",
+    "code": "from typing import List, Dict\ndef total(scores: List[int]) -> int:\n    return sum(scores)\nprint(total([1, 2, 3]))",
+    "topic_slug": "type-hints",
+    "tags": [
+      "type",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "TypedDict Note",
+    "slug": "snip-type-hints-typeddict-note",
+    "description": "Type Hints: Structured dict typing",
+    "code": "from typing import TypedDict\nclass User(TypedDict):\n    name: str\nu: User = {\"name\": \"Ada\"}\nprint(u[\"name\"])",
+    "topic_slug": "type-hints",
+    "tags": [
+      "type",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Assert Test",
+    "slug": "snip-testing-assert-test",
+    "description": "Testing: Simple assertion",
+    "code": "def double(x):\n    return x * 2\nassert double(2) == 4\nprint(\"pass\")",
+    "topic_slug": "testing",
+    "tags": [
+      "testing",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Pytest Style",
+    "slug": "snip-testing-pytest-style",
+    "description": "Testing: Test function naming",
+    "code": "def test_sum():\n    assert 1 + 1 == 2\n\ntest_sum()\nprint(\"ok\")",
+    "topic_slug": "testing",
+    "tags": [
+      "testing",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Mock Patch",
+    "slug": "snip-testing-mock-patch",
+    "description": "Testing: Stub dependency",
+    "code": "from unittest.mock import patch\nwith patch(\"builtins.len\", return_value=5):\n    print(len([1, 2, 3]))",
+    "topic_slug": "testing",
+    "tags": [
+      "testing",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Parametrize Pattern",
+    "slug": "snip-testing-parametrize-pattern",
+    "description": "Testing: Table-driven tests",
+    "code": "cases = [(1, 2, 3), (2, 3, 5)]\nfor a, b, expected in cases:\n    assert a + b == expected\nprint(len(cases))",
+    "topic_slug": "testing",
+    "tags": [
+      "testing",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Datetime Now",
+    "slug": "snip-stdlib-datetime-now",
+    "description": "Standard Library: Current UTC date",
+    "code": "from datetime import datetime, timezone\nprint(datetime.now(timezone.utc).year > 2000)",
+    "topic_slug": "stdlib",
+    "tags": [
+      "stdlib",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Deque Rotate",
+    "slug": "snip-stdlib-collections-deque",
+    "description": "Standard Library: Efficient queue ops",
+    "code": "from collections import deque\nd = deque([1, 2, 3])\nd.rotate(1)\nprint(list(d))",
+    "topic_slug": "stdlib",
+    "tags": [
+      "stdlib",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Permutations",
+    "slug": "snip-stdlib-itertools-permutations",
+    "description": "Standard Library: Generate permutations",
+    "code": "from itertools import permutations\nprint(len(list(permutations(\"ab\"))))",
+    "topic_slug": "stdlib",
+    "tags": [
+      "stdlib",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Dataclass User",
+    "slug": "snip-stdlib-dataclass-user",
+    "description": "Standard Library: Auto-generated methods",
+    "code": "from dataclasses import dataclass\n@dataclass\nclass User:\n    name: str\nprint(User(\"Ada\").name)",
+    "topic_slug": "stdlib",
+    "tags": [
+      "stdlib",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": true
+  },
+  {
+    "title": "Thread Start",
+    "slug": "snip-concurrency-thread-start",
+    "description": "Concurrency: Run worker thread",
+    "code": "import threading\ndef work():\n    print(\"thread\")\nt = threading.Thread(target=work)\nt.start()\nt.join()",
+    "topic_slug": "concurrency",
+    "tags": [
+      "concurrency",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Queue Worker",
+    "slug": "snip-concurrency-queue-worker",
+    "description": "Concurrency: Producer consumer queue",
+    "code": "import queue\nq = queue.Queue()\nq.put(1)\nprint(q.get())",
+    "topic_slug": "concurrency",
+    "tags": [
+      "concurrency",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Lock Counter",
+    "slug": "snip-concurrency-lock-counter",
+    "description": "Concurrency: Protect shared state",
+    "code": "import threading\ncount = 0\nlock = threading.Lock()\nwith lock:\n    count += 1\nprint(count)",
+    "topic_slug": "concurrency",
+    "tags": [
+      "concurrency",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Executor Map",
+    "slug": "snip-concurrency-executor-map",
+    "description": "Concurrency: Thread pool map",
+    "code": "from concurrent.futures import ThreadPoolExecutor\nwith ThreadPoolExecutor(max_workers=2) as ex:\n    print(list(ex.map(lambda x: x * 2, [1, 2, 3])))",
+    "topic_slug": "concurrency",
+    "tags": [
+      "concurrency",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Async Def",
+    "slug": "snip-async-async-def",
+    "description": "Async: Define coroutine",
+    "code": "import asyncio\nasync def main():\n    return 42\nprint(asyncio.run(main()))",
+    "topic_slug": "async",
+    "tags": [
+      "async",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": true
+  },
+  {
+    "title": "Gather Tasks",
+    "slug": "snip-async-gather-tasks",
+    "description": "Async: Run coroutines concurrently",
+    "code": "import asyncio\nasync def one():\n    return 1\nasync def main():\n    return sum(await asyncio.gather(one(), one()))\nprint(asyncio.run(main()))",
+    "topic_slug": "async",
+    "tags": [
+      "async",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Async For",
+    "slug": "snip-async-async-for",
+    "description": "Async: Iterate async generator",
+    "code": "import asyncio\nasync def gen():\n    for x in range(2):\n        yield x\nasync def main():\n    return [x async for x in gen()]\nprint(asyncio.run(main()))",
+    "topic_slug": "async",
+    "tags": [
+      "async",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Asyncio Sleep",
+    "slug": "snip-async-asyncio-sleep",
+    "description": "Async: Non-blocking delay",
+    "code": "import asyncio\nasync def main():\n    await asyncio.sleep(0)\n    return \"done\"\nprint(asyncio.run(main()))",
+    "topic_slug": "async",
+    "tags": [
+      "async",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Timeit Once",
+    "slug": "snip-performance-timeit-once",
+    "description": "Performance: Measure tiny snippet",
+    "code": "import timeit\nprint(timeit.timeit(\"1 + 1\", number=1000) > 0)",
+    "topic_slug": "performance",
+    "tags": [
+      "performance",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Slots Memory",
+    "slug": "snip-performance-slots-memory",
+    "description": "Performance: Reduce instance dict overhead",
+    "code": "class Point:\n    __slots__ = (\"x\", \"y\")\n    def __init__(self, x, y):\n        self.x, self.y = x, y\nprint(Point(1, 2).x)",
+    "topic_slug": "performance",
+    "tags": [
+      "performance",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Local Reference",
+    "slug": "snip-performance-local-ref",
+    "description": "Performance: Avoid repeated lookups",
+    "code": "import math\nsqrt = math.sqrt\nprint(round(sqrt(16), 2))",
+    "topic_slug": "performance",
+    "tags": [
+      "performance",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Join Strings",
+    "slug": "snip-performance-join-strings",
+    "description": "Performance: Efficient concatenation",
+    "code": "parts = [\"a\", \"b\", \"c\"]\nprint(\"\".join(parts))",
+    "topic_slug": "performance",
+    "tags": [
+      "performance",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Singleton Pattern",
+    "slug": "snip-design-patterns-singleton-meta",
+    "description": "Design Patterns: Single shared instance",
+    "code": "class Singleton:\n    _instance = None\n    def __new__(cls):\n        if cls._instance is None:\n            cls._instance = super().__new__(cls)\n        return cls._instance\nprint(Singleton() is Singleton())",
+    "topic_slug": "design-patterns",
+    "tags": [
+      "design",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Factory Function",
+    "slug": "snip-design-patterns-factory-fn",
+    "description": "Design Patterns: Create by type key",
+    "code": "def make(kind):\n    return {\"a\": list, \"b\": set}[kind]()\nprint(type(make(\"a\")).__name__)",
+    "topic_slug": "design-patterns",
+    "tags": [
+      "design",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "Strategy Function",
+    "slug": "snip-design-patterns-strategy-fn",
+    "description": "Design Patterns: Pluggable algorithm",
+    "code": "def add(a, b):\n    return a + b\ndef mul(a, b):\n    return a * b\nops = {\"+\": add, \"*\": mul}\nprint(ops[\"+\"](2, 3))",
+    "topic_slug": "design-patterns",
+    "tags": [
+      "design",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Observer Callbacks",
+    "slug": "snip-design-patterns-observer-callbacks",
+    "description": "Design Patterns: Notify subscribers",
+    "code": "class Subject:\n    def __init__(self):\n        self.listeners = []\n    def subscribe(self, fn):\n        self.listeners.append(fn)\n    def emit(self, value):\n        for fn in self.listeners:\n            fn(value)\ns = Subject()\ns.subscribe(lambda v: print(v))\ns.emit(1)",
+    "topic_slug": "design-patterns",
+    "tags": [
+      "design",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  },
+  {
+    "title": "Argparse Basic",
+    "slug": "snip-data-scripting-argparse-basic",
+    "description": "Data & Scripting: CLI flag parsing",
+    "code": "import argparse\np = argparse.ArgumentParser()\np.add_argument(\"--name\", default=\"world\")\nargs = p.parse_args([])\nprint(args.name)",
+    "topic_slug": "data-scripting",
+    "tags": [
+      "data",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "CSV DictReader",
+    "slug": "snip-data-scripting-csv-dictreader",
+    "description": "Data & Scripting: Read CSV as dict rows",
+    "code": "import csv\nfrom io import StringIO\nr = csv.DictReader(StringIO(\"name,score\\nAda,10\\n\"))\nprint(list(r)[0][\"name\"])",
+    "topic_slug": "data-scripting",
+    "tags": [
+      "data",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "basic",
+    "is_featured": false
+  },
+  {
+    "title": "HTTP Pattern",
+    "slug": "snip-data-scripting-requests-mock",
+    "description": "Data & Scripting: HTTP GET pattern (no network)",
+    "code": "url = \"https://example.com/api\"\nprint(url.endswith(\"/api\"))",
+    "topic_slug": "data-scripting",
+    "tags": [
+      "data",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "intermediate",
+    "is_featured": false
+  },
+  {
+    "title": "Pydantic Model",
+    "slug": "snip-data-scripting-pydantic-model",
+    "description": "Data & Scripting: Validate data shape",
+    "code": "try:\n    from pydantic import BaseModel\n    class Item(BaseModel):\n        name: str\n    print(Item(name=\"book\").name)\nexcept ImportError:\n    print(\"book\")",
+    "topic_slug": "data-scripting",
+    "tags": [
+      "data",
+      "starter",
+      "pattern"
+    ],
+    "difficulty": "advanced",
+    "is_featured": false
+  }
+]
