@@ -29,10 +29,11 @@ export default async function ModuleDetailPage({ params }: Props) {
   const curriculum = getModuleCurriculum(params.slug);
 
   let totalQuestions = 24;
+  let initialTopic: Awaited<ReturnType<typeof api.getTopic>> | undefined;
   try {
-    const topics = await api.getTopics();
-    const topic = topics.find((t) => t.slug === params.slug);
-    if (topic) totalQuestions = topic.total_questions;
+    const topic = await api.getTopic(params.slug);
+    totalQuestions = topic.total_questions;
+    initialTopic = topic;
   } catch {
     /* use default */
   }
@@ -93,10 +94,10 @@ export default async function ModuleDetailPage({ params }: Props) {
             <LearningPath topicSlug={params.slug} curriculum={curriculum} />
           </section>
 
-          <ModuleExercisesSection topicSlug={params.slug} curriculum={curriculum} />
+          <ModuleExercisesSection topicSlug={params.slug} curriculum={curriculum} initialTopic={initialTopic} />
         </>
       ) : (
-        <ModuleExercisesSection topicSlug={params.slug} />
+        <ModuleExercisesSection topicSlug={params.slug} initialTopic={initialTopic} />
       )}
     </div>
   );

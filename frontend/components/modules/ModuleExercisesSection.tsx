@@ -13,14 +13,17 @@ const DIFFICULTY_ORDER = ["basic", "intermediate", "advanced"] as const;
 type Props = {
   topicSlug: string;
   curriculum?: ModuleCurriculum;
+  initialTopic?: TopicDetail;
 };
 
-export function ModuleExercisesSection({ topicSlug, curriculum }: Props) {
-  const [topic, setTopic] = useState<TopicDetail | null>(null);
+export function ModuleExercisesSection({ topicSlug, curriculum, initialTopic }: Props) {
+  const [topic, setTopic] = useState<TopicDetail | null>(initialTopic ?? null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialTopic);
 
   useEffect(() => {
+    if (initialTopic) return;
+
     let cancelled = false;
     (async () => {
       try {
@@ -40,7 +43,7 @@ export function ModuleExercisesSection({ topicSlug, curriculum }: Props) {
     return () => {
       cancelled = true;
     };
-  }, [topicSlug]);
+  }, [topicSlug, initialTopic]);
 
   if (loading) {
     return (

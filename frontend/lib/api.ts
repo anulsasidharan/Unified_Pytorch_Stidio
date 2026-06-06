@@ -43,9 +43,15 @@ async function request<T>(
   const isServer = typeof window === "undefined";
   const useNextCache = isServer && isPublicGet && revalidate !== 0;
 
+  const timeoutSignal =
+    typeof AbortSignal !== "undefined" && "timeout" in AbortSignal
+      ? AbortSignal.timeout(8000)
+      : undefined;
+
   const res = await fetch(`${getApiBase()}${path}`, {
     ...fetchOptions,
     headers,
+    signal: timeoutSignal,
     ...(useNextCache
       ? { next: { revalidate: revalidate ?? 300 } }
       : { cache: isPublicGet ? "default" : "no-store" }),

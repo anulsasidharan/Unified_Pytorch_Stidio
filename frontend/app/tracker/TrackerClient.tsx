@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import {
   Line,
   LineChart,
@@ -14,36 +13,10 @@ import { HeatmapCalendar } from "@/components/tracker/HeatmapCalendar";
 import { ProgressRing } from "@/components/tracker/ProgressRing";
 import { StreakCounter } from "@/components/tracker/StreakCounter";
 import { WeeklyChart } from "@/components/tracker/WeeklyChart";
-import { api } from "@/lib/api";
-import { getAccessToken } from "@/lib/auth";
+import { useTrackerData } from "@/lib/hooks/useTrackerData";
 
 export function TrackerClient() {
-  const token = getAccessToken();
-  const [dashboard, setDashboard] = useState<Awaited<
-    ReturnType<typeof api.getDashboard>
-  > | null>(null);
-  const [heatmap, setHeatmap] = useState<Awaited<ReturnType<typeof api.getHeatmap>> | null>(
-    null,
-  );
-  const [progress, setProgress] = useState<Awaited<ReturnType<typeof api.getProgress>> | null>(
-    null,
-  );
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!token) return;
-    Promise.all([
-      api.getDashboard(token),
-      api.getHeatmap(token),
-      api.getProgress(token),
-    ])
-      .then(([d, h, p]) => {
-        setDashboard(d);
-        setHeatmap(h);
-        setProgress(p);
-      })
-      .catch((e) => setError(e instanceof Error ? e.message : "Load failed"));
-  }, [token]);
+  const { token, dashboard, progress, heatmap, loading, isRefreshing, error } = useTrackerData();
 
   if (!token) {
     return (
@@ -56,12 +29,16 @@ export function TrackerClient() {
     );
   }
 
-  if (error) {
+  if (loading && !dashboard) {
+    return <p className="text-slate-400">Loading tracker…</p>;
+  }
+
+  if (error && !dashboard) {
     return <p className="text-rose-300 text-sm">{error}</p>;
   }
 
   if (!dashboard) {
-    return <p className="text-slate-400">Loading tracker…</p>;
+    return <p className="text-slate-400">No tracker data available.</p>;
   }
 
   const breakdown = dashboard.difficulty_breakdown;
@@ -70,6 +47,11 @@ export function TrackerClient() {
 
   return (
     <div className="space-y-8">
+      {isRefreshing && (
+        <p className="text-xs text-slate-500" aria-live="polite">
+          Refreshing…
+        </p>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
         <StreakCounter
           current={dashboard.streak.current}

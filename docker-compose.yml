@@ -117,6 +117,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
+      target: dev
     container_name: python-studio-frontend
     restart: unless-stopped
     ports:

@@ -14,6 +14,7 @@ export default function ModulesLayout({ children }: { children: React.ReactNode 
               <li key={m.slug}>
                 <Link
                   href={`/modules/${m.slug}`}
+                  prefetch
                   className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-xs text-[var(--text-muted)] hover:bg-[var(--input-bg)] hover:text-[var(--text-primary)]"
                 >
                   <span aria-hidden>{m.icon}</span>
