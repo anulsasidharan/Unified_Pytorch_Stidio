@@ -19,7 +19,7 @@ type ThemeContextValue = {
 
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-const STORAGE_KEY = "pytorch-studio-theme";
+const STORAGE_KEY = "python-learning-studio-theme";
 
 function applyTheme(theme: Theme) {
   const root = document.documentElement;
@@ -29,7 +29,6 @@ function applyTheme(theme: Theme) {
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<Theme>("dark");
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY) as Theme | null;
@@ -41,7 +40,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
           : "dark";
     setThemeState(initial);
     applyTheme(initial);
-    setMounted(true);
   }, []);
 
   const setTheme = useCallback((next: Theme) => {
@@ -58,10 +56,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     () => ({ theme, setTheme, toggleTheme }),
     [theme, setTheme, toggleTheme],
   );
-
-  if (!mounted) {
-    return <div className="min-h-screen bg-slate-950">{children}</div>;
-  }
 
   return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
 }

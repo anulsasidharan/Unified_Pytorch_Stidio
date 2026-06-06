@@ -9,6 +9,10 @@ def test_topics_list(api_client) -> None:
     if data:
         assert "slug" in data[0]
         assert "module_number" in data[0]
+        module_numbers = [t["module_number"] for t in data]
+        assert len(module_numbers) == len(set(module_numbers)), (
+            "duplicate module_number in /topics — run python -m seeds.dedupe_topics"
+        )
 
 
 def test_auth_register_and_me(api_client) -> None:

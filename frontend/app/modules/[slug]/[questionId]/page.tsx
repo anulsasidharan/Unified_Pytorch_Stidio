@@ -8,7 +8,7 @@ import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { getLessonForQuestion } from "@/lib/lessons";
 import { api } from "@/lib/api";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 600;
 
 type Props = { params: { slug: string; questionId: string } };
 

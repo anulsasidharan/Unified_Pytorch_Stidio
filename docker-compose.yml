@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: pytorch-postgres
+    container_name: python-postgres
     restart: unless-stopped
     env_file:
       - .env
@@ -10,14 +10,14 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: ${POSTGRES_DB:-pytorch_studio}
+      POSTGRES_DB: ${POSTGRES_DB:-python_studio}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
       test:
         [
           "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-pytorch_studio}",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-python_studio}",
         ]
       interval: 5s
       timeout: 5s
@@ -26,7 +26,7 @@ services:
 
   redis:
     image: redis:7-alpine
-    container_name: pytorch-redis
+    container_name: python-redis
     restart: unless-stopped
     env_file:
       - .env
@@ -46,19 +46,19 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: pytorch-backend
+    container_name: python-backend
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - "${APP_PORT:-8000}:8000"
     environment:
-      APP_NAME: ${APP_NAME:-pytorch-learning-studio}
+      APP_NAME: ${APP_NAME:-unified-python-studio}
       APP_ENV: ${APP_ENV:-development}
       APP_PORT: 8000
       FRONTEND_URL: ${FRONTEND_URL:-http://localhost:3000}
       SECRET_KEY: ${SECRET_KEY:-change-me-in-docker-use-a-long-random-string}
-      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-pytorch_studio}
+      DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-password}@postgres:5432/${POSTGRES_DB:-python_studio}
       REDIS_URL: redis://redis:6379/0
       CELERY_BROKER_URL: redis://redis:6379/1
       CELERY_RESULT_BACKEND: redis://redis:6379/2
@@ -76,13 +76,14 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: pytorch-frontend
+    container_name: python-frontend
     restart: unless-stopped
     env_file:
       - .env
     ports:
       - "${FRONTEND_PORT:-3000}:3000"
     environment:
+      API_URL: http://backend:8000/api/v1
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
     volumes:
       - ./frontend:/app

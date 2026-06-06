@@ -4,8 +4,9 @@ import { ThemeProvider } from "@/components/theme/ThemeProvider";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PyTorch Learning Studio",
-  description: "Learn PyTorch step-by-step with lessons, diagrams, and hands-on exercises",
+  title: "Python Learning Studio",
+  description:
+    "Learn Python from basics to advanced with live code execution, 25 structured modules, and an AI tutor",
 };
 
 export default function RootLayout({

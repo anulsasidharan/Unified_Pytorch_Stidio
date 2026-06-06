@@ -1,5 +1,14 @@
-const API_BASE =
-  process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+/** Browser calls the host-mapped port; SSR inside Docker uses the backend service name. */
+export function getApiBase(): string {
+  if (typeof window === "undefined") {
+    return (
+      process.env.API_URL ??
+      process.env.NEXT_PUBLIC_API_URL ??
+      "http://localhost:8000/api/v1"
+    );
+  }
+  return process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
+}
 
 export class ApiError extends Error {
   constructor(
@@ -10,23 +19,36 @@ export class ApiError extends Error {
   }
 }
 
+type RequestOptions = RequestInit & {
+  /** Seconds to cache public GET responses in Next.js data cache (SSR). */
+  revalidate?: number;
+};
+
 async function request<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
   token?: string | null,
 ): Promise<T> {
+  const { revalidate, ...fetchOptions } = options;
   const headers: HeadersInit = {
     "Content-Type": "application/json",
-    ...(options.headers ?? {}),
+    ...(fetchOptions.headers ?? {}),
   };
   if (token) {
     (headers as Record<string, string>)["Authorization"] = `Bearer ${token}`;
   }
 
-  const res = await fetch(`${API_BASE}${path}`, {
-    ...options,
+  const method = (fetchOptions.method ?? "GET").toUpperCase();
+  const isPublicGet = method === "GET" && !token;
+  const isServer = typeof window === "undefined";
+  const useNextCache = isServer && isPublicGet && revalidate !== 0;
+
+  const res = await fetch(`${getApiBase()}${path}`, {
+    ...fetchOptions,
     headers,
-    cache: "no-store",
+    ...(useNextCache
+      ? { next: { revalidate: revalidate ?? 300 } }
+      : { cache: isPublicGet ? "default" : "no-store" }),
   });
 
   if (!res.ok) {
@@ -200,7 +222,7 @@ export type AttemptSubmitResult = {
 
 export const api = {
   getTopics: (token?: string | null) =>
-    request<TopicListItem[]>("/topics", {}, token),
+    request<TopicListItem[]>("/topics", { revalidate: token ? 0 : 300 }, token),
 
   getDashboard: (token: string) =>
     request<DashboardData>("/tracker/dashboard", {}, token),
@@ -244,9 +266,10 @@ export const api = {
     ),
 
   getTopic: (slug: string, token?: string | null) =>
-    request<TopicDetail>(`/topics/${slug}`, {}, token),
+    request<TopicDetail>(`/topics/${slug}`, { revalidate: token ? 0 : 120 }, token),
 
-  getQuestion: (id: number) => request<QuestionDetail>(`/questions/${id}`),
+  getQuestion: (id: number) =>
+    request<QuestionDetail>(`/questions/${id}`, { revalidate: 600 }),
 
   searchQuestions: (params: {
     q: string;
@@ -361,6 +384,38 @@ export const api = {
 
   deleteNote: (token: string, id: number) =>
     request<void>(`/notes/${id}`, { method: "DELETE" }, token),
+
+  lintCode: (code: string) =>
+    request<{ violations: { line: number; col: number; code: string; message: string }[]; score: number }>(
+      "/lint",
+      { method: "POST", body: JSON.stringify({ code }) },
+    ),
+
+  getSnippets: (params?: { module_id?: number; tag?: string }) => {
+    const q = new URLSearchParams();
+    if (params?.module_id != null) q.set("module_id", String(params.module_id));
+    if (params?.tag) q.set("tag", params.tag);
+    const qs = q.toString();
+    return request<SnippetItem[]>(`/snippets${qs ? `?${qs}` : ""}`, { revalidate: 300 });
+  },
+
+  getSnippet: (slug: string) =>
+    request<SnippetItem>(`/snippets/${slug}`, { revalidate: 300 }),
+
+  getFeaturedSnippets: () =>
+    request<SnippetItem[]>("/snippets/featured", { revalidate: 300 }),
+};
+
+export type SnippetItem = {
+  id: number;
+  title: string;
+  slug: string | null;
+  description: string | null;
+  code: string;
+  module_id: number | null;
+  tags: string[] | null;
+  difficulty: string | null;
+  is_featured: boolean;
 };
 
 export type ManualImportBody = {
@@ -449,7 +504,7 @@ export type NoteCreateBody = {
 async function requestForm<T>(path: string, file: File, token: string): Promise<T> {
   const form = new FormData();
   form.append("file", file);
-  const res = await fetch(`${API_BASE}${path}`, {
+  const res = await fetch(`${getApiBase()}${path}`, {
     method: "POST",
     headers: { Authorization: `Bearer ${token}` },
     body: form,

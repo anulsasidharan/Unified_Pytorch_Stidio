@@ -1,4 +1,4 @@
-"""Anthropic API wrapper for PyTorch tutor."""
+"""Anthropic API wrapper for Python tutor."""
 
 from __future__ import annotations
 
@@ -10,50 +10,7 @@ from uuid import UUID
 from anthropic import APIError, AsyncAnthropic, AuthenticationError
 
 from app.config import get_settings
-
-PYTORCH_TUTOR_SYSTEM_PROMPT = """
-You are an expert PyTorch engineer and educator with deep knowledge of:
-- PyTorch internals (autograd engine, dispatcher, CUDA integration)
-- Deep learning theory (optimization, regularization, architectures)
-- Computer vision, NLP, and sequence modeling with PyTorch
-- Production deployment (TorchScript, ONNX, torch.compile)
-- Best practices for training stability, debugging, and performance
-
-## Your Role
-You help learners working through the PyTorch Learning Studio platform.
-You answer questions about PyTorch concepts, debug their code, and guide
-them through building models. You are patient, precise, and educational.
-
-## Communication Style
-- Always provide runnable PyTorch code examples (use PyTorch 2.x syntax)
-- When debugging, identify the root cause, not just the symptom
-- Explain WHY something works, not just HOW
-- Use analogies when explaining abstract concepts (e.g., autograd as a tape recorder)
-- For shape errors, always show the full shape trace
-
-## Formatting
-- Use Markdown for all responses
-- Wrap ALL code in ```python code blocks
-- Use bullet points for lists of issues or steps
-- Bold key terms on first mention
-
-## PyTorch-Specific Rules
-- Always mention the PyTorch version when behavior differs across versions
-- Prefer torch.nn.functional over deprecated patterns
-- For GPU code, always show both CPU and GPU versions
-- When showing training loops, always include: zero_grad, forward, loss, backward, step
-- Recommend torch.compile for performance-sensitive code (PyTorch 2.0+)
-
-## Limitations
-- Do not generate training data or full datasets
-- Do not debug non-PyTorch frameworks unless comparing to PyTorch
-- Keep responses focused on the user's actual question
-- On first hint for an exercise, do NOT provide the full solution — give a conceptual nudge
-
-## Context
-When the user provides code or an exercise context, focus your response on
-that specific code. Do not give generic answers when specific ones are possible.
-""".strip()
+from app.services.chatbot import PYTHON_TUTOR_SYSTEM_PROMPT
 
 EXERCISE_CONTEXT_TEMPLATE = """
 ## Current Exercise Context
@@ -183,7 +140,7 @@ class TutorService:
         history: list[dict],
         exercise_context: str | None,
     ) -> str:
-        system = PYTORCH_TUTOR_SYSTEM_PROMPT
+        system = PYTHON_TUTOR_SYSTEM_PROMPT
         if exercise_context:
             system = f"{system}\n\n{exercise_context}"
 
@@ -218,25 +175,24 @@ class TutorService:
     def _mock_response(self, message: str, exercise_context: str | None) -> str:
         """Offline fallback when ANTHROPIC_API_KEY is unset (dev/CI)."""
         hint = (
-            "**PyTorch Tutor (offline mode)** — set `ANTHROPIC_API_KEY` for live responses.\n\n"
+            "**Python Tutor (offline mode)** — set `ANTHROPIC_API_KEY` for live responses.\n\n"
         )
         if exercise_context:
             hint += (
-                "I see your exercise context. For shape errors, trace tensors layer-by-layer "
-                "with `.shape` after each op. For training loops, verify "
-                "`zero_grad → forward → loss → backward → step`.\n\n"
+                "I see your exercise context. Read tracebacks bottom-up, check types with "
+                "`type()` and `isinstance()`, and prefer Pythonic idioms over verbose loops.\n\n"
             )
-        if "shape" in message.lower():
+        if "error" in message.lower() or "traceback" in message.lower():
             hint += (
-                "**Shape trace tip:** Print `x.shape` after every transform. "
-                "Linear expects `(batch, in_features)` — if you see `(features, batch)`, transpose.\n"
+                "**Debug tip:** The last line of a traceback names the exception. "
+                "Fix the innermost cause first, then re-run.\n"
             )
         else:
             hint += (
-                "Ask about autograd, `nn.Module`, optimizers, or DataLoaders — "
-                "I'll guide you with PyTorch 2.x patterns.\n"
+                "Ask about syntax, data structures, functions, OOP, or debugging — "
+                "I'll guide you with Python 3.11+ patterns.\n"
             )
-        hint += "\n```python\nimport torch\n# Try printing shapes at each step\nprint(tensor.shape)\n```"
+        hint += "\n```python\n# Try printing types and values at each step\nprint(repr(value))\n```"
         return hint
 
 
