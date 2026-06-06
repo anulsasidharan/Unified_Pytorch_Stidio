@@ -233,8 +233,24 @@ export type ExecuteResult = {
 };
 
 export const api = {
-  executeCode: (body: { code: string; question_id?: number; time_limit_ms?: number }) =>
+  executeCode: (body: {
+    code: string;
+    question_id?: number;
+    time_limit_ms?: number;
+    stdout?: string;
+    stderr?: string;
+    execution_time_ms?: number;
+  }) =>
     request<ExecuteResult>("/execute", { method: "POST", body: JSON.stringify(body) }),
+
+  executeBatch: (body: {
+    code: string;
+    test_cases: { input?: string; expected_output: string; check_type?: string }[];
+  }) =>
+    request<{ results: { passed: boolean; actual_output: string; error: string | null }[]; score: number }>(
+      "/execute/batch",
+      { method: "POST", body: JSON.stringify(body) },
+    ),
 
   getTopics: (token?: string | null) =>
     request<TopicListItem[]>("/topics", { revalidate: token ? 0 : 300 }, token),

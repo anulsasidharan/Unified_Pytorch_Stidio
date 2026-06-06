@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { api, type QuestionListItem } from "@/lib/api";
+import { getExerciseHref } from "@/lib/utils";
 
 const DIFFICULTIES = ["", "basic", "intermediate", "advanced"] as const;
 const TYPES = [
@@ -140,7 +141,7 @@ export function ExercisesClient() {
         {results.map((q) => (
           <li key={q.id}>
             <Link
-              href={`/modules/${q.topic_slug}/${q.id}`}
+              href={getExerciseHref(q.topic_slug, q.id, q.question_type)}
               className="flex flex-col gap-2 rounded-xl border border-[var(--border)] bg-[var(--card-bg)] px-4 py-3 transition hover:border-indigo-500/50 sm:flex-row sm:flex-wrap sm:items-center"
             >
               <span className="font-medium text-[var(--text-primary)]">{q.title}</span>
