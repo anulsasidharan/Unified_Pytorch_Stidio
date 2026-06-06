@@ -2,7 +2,7 @@
 
 > Persistent project memory for agents and developers. Update after meaningful decisions, phase completions, or blockers.
 
-**Last updated:** 2026-06-03  
+**Last updated:** 2026-06-06  
 **Specification version:** `rules/CLAUDE.md` v1.0  
 **Repository state:** Phase 5 **complete** — Modules 08–13 seeded, bulk expansion (~520 exercises), search UI/API, editor shortcuts, dark mode, responsive nav
 
@@ -130,3 +130,4 @@
 | 2026-06-03 | Phase 3 complete: progress/tracker/revision routers, XP+SM-2 services, Celery beat, dashboard/tracker/revision UI (Recharts) |
 | 2026-06-03 | Phase 4 complete: import_service + import_/notes routers, custom-questions CRUD, community browser, import page (4 tabs), UserNotes on exercise page |
 | 2026-06-03 | Phase 5 complete: questions_modules_08_13 + bulk_expand seeds, GET /questions/search, /exercises page, HintDrawer + shortcuts, ThemeProvider + AppHeader |
+| 2026-06-06 | Python fork Phase 1 complete: `bootstrap_db.py`, dedupe wired via `ensure_topics` + entrypoint, 25 active Python modules verified (Docker + host) |

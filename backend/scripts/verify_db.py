@@ -28,7 +28,7 @@ EXPECTED_TABLES = {
 async def main() -> int:
     url = os.getenv(
         "DATABASE_URL",
-        "postgresql+asyncpg://postgres:password@localhost:5432/pytorch_studio",
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/python_studio",
     )
     engine = create_async_engine(url)
     ok = True
