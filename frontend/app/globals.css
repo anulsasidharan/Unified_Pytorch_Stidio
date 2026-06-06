@@ -3,6 +3,8 @@
 @tailwind utilities;
 
 :root {
+  --python-blue: #3776ab;
+  --python-yellow: #ffd43b;
   --bg: #020617;
   --header-bg: rgba(15, 23, 42, 0.85);
   --card-bg: rgba(15, 23, 42, 0.5);
@@ -11,6 +13,8 @@
   --text-primary: #f1f5f9;
   --text-secondary: #cbd5e1;
   --text-muted: #94a3b8;
+  --accent: var(--python-blue);
+  --accent-secondary: var(--python-yellow);
 }
 
 html.light {
@@ -61,5 +65,6 @@ body {
 }
 
 .prose-tutor code {
-  @apply font-mono text-indigo-500 dark:text-indigo-200;
+  @apply font-mono;
+  color: var(--python-blue);
 }

@@ -5,14 +5,14 @@ import { useState } from "react";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 const NAV = [
-  { href: "/modules", label: "Learn" },
+  { href: "/modules", label: "Modules" },
+  { href: "/snippets", label: "Snippets" },
   { href: "/exercises", label: "Search" },
   { href: "/tutor", label: "AI Tutor" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/tracker", label: "Tracker" },
   { href: "/revision", label: "Revision" },
   { href: "/import", label: "Import" },
-  { href: "/community", label: "Community" },
 ];
 
 export function AppHeader() {
@@ -22,8 +22,11 @@ export function AppHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--border)] bg-[var(--header-bg)] backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center gap-4 px-4 py-3 text-sm">
-        <Link href="/" className="shrink-0 font-semibold text-indigo-500 dark:text-indigo-400">
-          PyTorch Studio
+        <Link
+          href="/"
+          className="shrink-0 font-semibold text-[var(--python-blue)] dark:text-[var(--python-yellow)]"
+        >
+          Python Learning Studio
         </Link>
 
         <div className="hidden items-center gap-5 md:flex">

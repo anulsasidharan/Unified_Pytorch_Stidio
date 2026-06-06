@@ -7,8 +7,9 @@ if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
 fi
 
 if [ "${SEED_TOPICS:-true}" = "true" ]; then
-  echo "Seeding PyTorch module topics..."
+  echo "Ensuring PyTorch module topics (idempotent)..."
   python -m seeds.topics
+  python -m seeds.ensure_topics
 fi
 
 exec "$@"

@@ -2,10 +2,11 @@
 
 from decimal import Decimal
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.cache import get_json_cached
 from app.database import get_db
 from app.deps import get_optional_user
 from app.models.attempt import UserAttempt
@@ -16,6 +17,11 @@ from app.models.user import User
 from app.schemas.topics import QuestionSummary, TopicDetail, TopicListItem, TopicProgressSummary
 
 router = APIRouter(prefix="/topics", tags=["topics"])
+
+TOPICS_LIST_CACHE_KEY = "cache:topics:list:v1"
+TOPIC_DETAIL_CACHE_PREFIX = "cache:topics:detail:v1:"
+TOPICS_LIST_TTL = 300
+TOPIC_DETAIL_TTL = 120
 
 
 def _progress_summary(progress: UserProgress | None) -> TopicProgressSummary | None:
@@ -36,11 +42,7 @@ async def _get_topic_by_slug(slug: str, db: AsyncSession) -> Topic:
     return topic
 
 
-@router.get("", response_model=list[TopicListItem])
-async def list_topics(
-    db: AsyncSession = Depends(get_db),
-    user: User | None = Depends(get_optional_user),
-) -> list[TopicListItem]:
+async def _build_topics_list(db: AsyncSession, user: User | None) -> list[dict]:
     result = await db.execute(
         select(Topic).where(Topic.is_active.is_(True)).order_by(Topic.order_index)
     )
@@ -64,17 +66,12 @@ async def list_topics(
             color=t.color,
             total_questions=t.total_questions,
             progress=_progress_summary(progress_map.get(t.id)),
-        )
+        ).model_dump()
         for t in topics
     ]
 
 
-@router.get("/{slug}", response_model=TopicDetail)
-async def get_topic(
-    slug: str,
-    db: AsyncSession = Depends(get_db),
-    user: User | None = Depends(get_optional_user),
-) -> TopicDetail:
+async def _build_topic_detail(slug: str, db: AsyncSession, user: User | None) -> dict:
     topic = await _get_topic_by_slug(slug, db)
 
     questions_result = await db.execute(
@@ -132,7 +129,45 @@ async def get_topic(
             )
             for q in questions
         ],
-    )
+    ).model_dump()
+
+
+@router.get("", response_model=list[TopicListItem])
+async def list_topics(
+    response: Response,
+    db: AsyncSession = Depends(get_db),
+    user: User | None = Depends(get_optional_user),
+) -> list[TopicListItem]:
+    if user is not None:
+        data = await _build_topics_list(db, user)
+    else:
+        response.headers["Cache-Control"] = f"public, max-age={TOPICS_LIST_TTL}"
+        data = await get_json_cached(
+            TOPICS_LIST_CACHE_KEY,
+            TOPICS_LIST_TTL,
+            lambda: _build_topics_list(db, None),
+        )
+    return [TopicListItem.model_validate(item) for item in data]
+
+
+@router.get("/{slug}", response_model=TopicDetail)
+async def get_topic(
+    slug: str,
+    response: Response,
+    db: AsyncSession = Depends(get_db),
+    user: User | None = Depends(get_optional_user),
+) -> TopicDetail:
+    if user is not None:
+        data = await _build_topic_detail(slug, db, user)
+    else:
+        response.headers["Cache-Control"] = f"public, max-age={TOPIC_DETAIL_TTL}"
+        cache_key = f"{TOPIC_DETAIL_CACHE_PREFIX}{slug}"
+        data = await get_json_cached(
+            cache_key,
+            TOPIC_DETAIL_TTL,
+            lambda: _build_topic_detail(slug, db, None),
+        )
+    return TopicDetail.model_validate(data)
 
 
 @router.get("/{slug}/progress", response_model=TopicProgressSummary)

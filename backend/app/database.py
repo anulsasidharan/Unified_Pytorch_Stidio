@@ -14,7 +14,7 @@ class Base(DeclarativeBase):
 
 settings = get_settings()
 _engine_kwargs: dict = {
-    "echo": settings.app_env == "development",
+    "echo": settings.database_echo,
 }
 if os.getenv("TESTING"):
     _engine_kwargs["poolclass"] = NullPool

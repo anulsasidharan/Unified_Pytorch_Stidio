@@ -10,17 +10,18 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    app_name: str = "pytorch-learning-studio"
+    app_name: str = "unified-python-studio"
     app_env: str = "development"
     app_port: int = 8000
     frontend_url: str = "http://localhost:3000"
     secret_key: str = "change-me-in-production-min-32-chars"
 
     database_url: str = (
-        "postgresql+asyncpg://postgres:password@localhost:5432/pytorch_studio"
+        "postgresql+asyncpg://postgres:postgres@localhost:5432/python_studio"
     )
     database_pool_size: int = 10
     database_max_overflow: int = 20
+    database_echo: bool = False
 
     redis_url: str = "redis://localhost:6379/0"
     celery_broker_url: str = "redis://localhost:6379/1"
@@ -32,8 +33,8 @@ class Settings(BaseSettings):
     tutor_daily_limit_free: int = 20
 
     aws_region: str = "ca-central-1"
-    aws_s3_bucket: str = "pytorch-studio-assets"
-    aws_cloudfront_url: str = "https://cdn.pytorch-studio.example.com"
+    aws_s3_bucket: str = "python-studio-assets"
+    aws_cloudfront_url: str = "https://cdn.python-studio.example.com"
 
     colab_notebook_base_url: str = "https://colab.research.google.com/notebook#"
     nbviewer_base_url: str = "https://nbviewer.org/url/"

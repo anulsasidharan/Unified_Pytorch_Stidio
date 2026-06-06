@@ -2,6 +2,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 
 from app.config import get_settings
 from app.core.redis_client import close_redis
@@ -9,11 +10,14 @@ from app.routers import (
     attempts,
     auth,
     colab,
+    execute,
     import_,
+    lint,
     notes,
     progress,
     questions,
     revision,
+    snippets,
     topics,
     tracker,
     tutor,
@@ -36,6 +40,7 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+app.add_middleware(GZipMiddleware, minimum_size=500)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[settings.frontend_url, "http://127.0.0.1:3000"],
@@ -56,6 +61,9 @@ api_router.include_router(tracker.router)
 api_router.include_router(revision.router)
 api_router.include_router(import_.router)
 api_router.include_router(notes.router)
+api_router.include_router(execute.router)
+api_router.include_router(lint.router)
+api_router.include_router(snippets.router)
 app.include_router(api_router)
 
 
