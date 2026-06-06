@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { AppHeader } from "@/components/layout/AppHeader";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
+import { buildMetadata } from "@/lib/seo";
 import "./globals.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = buildMetadata({
   title: "Python Learning Studio",
-  description:
-    "Learn Python from basics to advanced with live code execution, 25 structured modules, and an AI tutor",
-};
+});
 
 export default function RootLayout({
   children,

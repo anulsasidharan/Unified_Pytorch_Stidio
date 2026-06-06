@@ -111,8 +111,8 @@ async def update_me(
 ) -> User:
     if body.full_name is not None:
         user.full_name = body.full_name
-    if body.pytorch_level is not None:
-        user.pytorch_level = body.pytorch_level
+    if body.python_level is not None:
+        user.pytorch_level = body.python_level
     if body.daily_goal is not None:
         user.daily_goal = body.daily_goal
     await db.commit()

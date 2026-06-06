@@ -1,5 +1,12 @@
 import { SnippetCard } from "@/components/SnippetCard";
 import { api } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
+
+export const metadata = buildMetadata({
+  title: "Snippet Library",
+  description: "Reusable Pythonic patterns across all 25 modules — copy, preview, or run in the editor.",
+  path: "/snippets",
+});
 
 export const revalidate = 300;
 
@@ -33,7 +40,7 @@ export default async function SnippetsPage() {
           No snippets yet — seed the database or create snippets via the API.
         </p>
       ) : (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2">
           {snippets.map((snippet) => (
             <SnippetCard
               key={snippet.id}

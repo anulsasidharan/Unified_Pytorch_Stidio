@@ -10,11 +10,10 @@ const DIFFICULTIES = ["", "basic", "intermediate", "advanced"] as const;
 const TYPES = [
   "",
   "code_completion",
-  "debug_model",
+  "debug_code",
   "conceptual_mcq",
   "build_from_scratch",
-  "notebook_challenge",
-  "shape_assertion",
+  "output_assertion",
 ] as const;
 
 export function ExercisesClient() {
@@ -74,7 +73,7 @@ export function ExercisesClient() {
           <input
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
-            placeholder="e.g. tensors"
+            placeholder="e.g. python-basics"
             className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 sm:w-40"
           />
         </label>
@@ -113,7 +112,7 @@ export function ExercisesClient() {
           <input
             value={tag}
             onChange={(e) => setTag(e.target.value)}
-            placeholder="autograd"
+            placeholder="e.g. loops"
             className="w-full rounded-lg border border-[var(--border)] bg-[var(--input-bg)] px-3 py-2 sm:w-32"
           />
         </label>

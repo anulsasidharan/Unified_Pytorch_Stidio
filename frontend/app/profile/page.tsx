@@ -1,8 +1,16 @@
+import Link from "next/link";
+
 export default function ProfilePage() {
   return (
-    <div>
+    <div className="space-y-4">
       <h1 className="text-2xl font-bold">Profile</h1>
-      <p className="mt-2 text-slate-400">Profile settings coming soon.</p>
+      <p className="text-[var(--text-muted)]">
+        Account preferences and editor settings live on the{" "}
+        <Link href="/settings" className="text-[var(--python-blue)] hover:opacity-80">
+          Settings
+        </Link>{" "}
+        page.
+      </p>
     </div>
   );
 }

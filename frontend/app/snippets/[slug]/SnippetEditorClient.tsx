@@ -39,11 +39,11 @@ export function SnippetEditorClient({ title, slug, description, code }: Props) {
         <Link href="/snippets" className="text-sm text-[var(--python-blue)] hover:opacity-80">
           ← All snippets
         </Link>
-        <h1 className="mt-3 text-2xl font-bold">{title}</h1>
-        {description && <p className="mt-2 text-[var(--text-muted)]">{description}</p>}
+        <h1 className="mt-3 text-xl font-bold sm:text-2xl">{title}</h1>
+        {description && <p className="mt-2 text-sm text-[var(--text-muted)]">{description}</p>}
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center gap-3">
         <RunButton onRun={handleRun} running={running} />
         <button
           type="button"
@@ -54,18 +54,20 @@ export function SnippetEditorClient({ title, slug, description, code }: Props) {
         </button>
       </div>
 
-      <CodeEditor
-        initialCode={code}
-        value={editorCode}
-        onCodeChange={setEditorCode}
-        height="480px"
-      />
-      <OutputPane
-        stdout={stdout}
-        stderr={stderr}
-        error={error}
-        executionTimeMs={executionTimeMs}
-      />
+      <div className="grid gap-4 lg:grid-cols-2">
+        <CodeEditor
+          initialCode={code}
+          value={editorCode}
+          onCodeChange={setEditorCode}
+          height="min(480px, 55vh)"
+        />
+        <OutputPane
+          stdout={stdout}
+          stderr={stderr}
+          error={error}
+          executionTimeMs={executionTimeMs}
+        />
+      </div>
     </div>
   );
 }

@@ -28,6 +28,9 @@ class Settings(BaseSettings):
     celery_result_backend: str = "redis://localhost:6379/2"
 
     anthropic_api_key: str = ""
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o"
+    tutor_provider: str = "auto"  # auto | openai | anthropic
     tutor_model: str = "claude-sonnet-4-20250514"
     tutor_max_tokens: int = 2048
     tutor_daily_limit_free: int = 20

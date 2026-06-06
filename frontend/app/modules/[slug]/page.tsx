@@ -6,10 +6,21 @@ import { ModuleDetailClient } from "@/components/modules/ModuleDetailClient";
 import { getModuleCurriculum } from "@/lib/lessons";
 import { getModuleMeta } from "@/lib/module-meta";
 import { api } from "@/lib/api";
+import { buildMetadata } from "@/lib/seo";
 
 export const revalidate = 3600;
 
 type Props = { params: { slug: string } };
+
+export async function generateMetadata({ params }: Props) {
+  const meta = getModuleMeta(params.slug);
+  if (!meta) return buildMetadata({ title: "Module" });
+  return buildMetadata({
+    title: meta.name,
+    description: meta.description,
+    path: `/modules/${params.slug}`,
+  });
+}
 
 export default async function ModuleDetailPage({ params }: Props) {
   const meta = getModuleMeta(params.slug);
@@ -46,10 +57,15 @@ export default async function ModuleDetailPage({ params }: Props) {
         <h2 className="text-lg font-semibold text-[var(--python-yellow)]">Level breakdown</h2>
         <div className="mt-4 grid gap-4 md:grid-cols-3">
           {(["basic", "intermediate", "advanced"] as const).map((level) => (
-            <div key={level} className="rounded-lg border border-[var(--border)] bg-[var(--input-bg)] p-4">
+            <Link
+              key={level}
+              href={`/modules/${params.slug}/${level}`}
+              className="rounded-lg border border-[var(--border)] bg-[var(--input-bg)] p-4 transition hover:border-[var(--python-blue)]/50"
+            >
               <h3 className="text-sm font-medium capitalize text-[var(--python-blue)]">{level}</h3>
               <p className="mt-2 text-sm text-[var(--text-muted)]">{meta.levels[level]}</p>
-            </div>
+              <p className="mt-3 text-xs text-[var(--python-yellow)]">View exercises →</p>
+            </Link>
           ))}
         </div>
       </section>

@@ -91,7 +91,7 @@ export function ChatInterface({ compact }: Props) {
       className={`flex flex-col ${compact ? "h-[360px]" : "min-h-[480px]"} rounded-xl border border-slate-800 bg-slate-900/50`}
     >
       <div className="flex items-center justify-between border-b border-slate-800 px-4 py-2 text-xs text-slate-400">
-        <span>PyTorch AI Tutor</span>
+        <span>Python AI Tutor</span>
         {usage && (
           <span>
             {usage.messages_today}/{usage.daily_limit} today
@@ -108,7 +108,7 @@ export function ChatInterface({ compact }: Props) {
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
         {messages.length === 0 && (
           <div className="rounded-lg border border-dashed border-slate-700 p-4 text-sm text-slate-400">
-            Ask about shape errors, autograd, training loops, or model design.
+            Ask about syntax, debugging, data structures, OOP, or Pythonic patterns.
             {exerciseContext
               ? " Exercise context is attached."
               : " Open from an exercise to attach context."}
@@ -132,7 +132,7 @@ export function ChatInterface({ compact }: Props) {
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Ask about PyTorch…"
+            placeholder="Ask about Python…"
             className="flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:border-indigo-500 focus:outline-none"
           />
           <button

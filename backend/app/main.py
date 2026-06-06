@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.gzip import GZipMiddleware
 
 from app.config import get_settings
+from app.core.env_validation import enforce_production_env
 from app.core.redis_client import close_redis
 from app.routers import (
     attempts,
@@ -12,6 +13,7 @@ from app.routers import (
     colab,
     execute,
     import_,
+    leaderboard,
     lint,
     modules,
     notes,
@@ -29,6 +31,8 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
+    if settings.app_env == "production":
+        enforce_production_env(settings)
     yield
     await close_redis()
 
@@ -66,6 +70,7 @@ api_router.include_router(execute.router)
 api_router.include_router(lint.router)
 api_router.include_router(modules.router)
 api_router.include_router(snippets.router)
+api_router.include_router(leaderboard.router)
 app.include_router(api_router)
 
 

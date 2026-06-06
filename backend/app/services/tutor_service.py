@@ -1,4 +1,4 @@
-"""Anthropic API wrapper for Python tutor."""
+"""OpenAI + Anthropic API wrapper for Python tutor."""
 
 from __future__ import annotations
 
@@ -8,6 +8,8 @@ from typing import Any
 from uuid import UUID
 
 from anthropic import APIError, AsyncAnthropic, AuthenticationError
+from openai import APIError as OpenAIAPIError
+from openai import AsyncOpenAI, AuthenticationError as OpenAIAuthError
 
 from app.config import get_settings
 from app.services.chatbot import PYTHON_TUTOR_SYSTEM_PROMPT
@@ -152,30 +154,77 @@ class TutorService:
                 messages.append({"role": role, "content": content})
         messages.append({"role": "user", "content": message})
 
-        api_key = (self.settings.anthropic_api_key or "").strip()
-        if api_key:
-            try:
-                client = AsyncAnthropic(api_key=api_key)
-                response = await client.messages.create(
-                    model=self.settings.tutor_model,
-                    max_tokens=self.settings.tutor_max_tokens,
-                    temperature=0.3,
-                    system=system,
-                    messages=messages,
-                )
-                parts = [block.text for block in response.content if hasattr(block, "text")]
-                return "\n".join(parts) if parts else "I could not generate a response."
-            except (AuthenticationError, APIError):
-                if self.settings.app_env == "production":
-                    raise
-                return self._mock_response(message, exercise_context)
+        provider = self._resolve_provider()
+        if provider == "openai":
+            text = await self._complete_openai(system, messages)
+            if text:
+                return text
+        elif provider == "anthropic":
+            text = await self._complete_anthropic(system, messages)
+            if text:
+                return text
 
         return self._mock_response(message, exercise_context)
+
+    def _resolve_provider(self) -> str | None:
+        configured = (self.settings.tutor_provider or "auto").lower()
+        has_openai = bool((self.settings.openai_api_key or "").strip())
+        has_anthropic = bool((self.settings.anthropic_api_key or "").strip())
+
+        if configured == "openai" and has_openai:
+            return "openai"
+        if configured == "anthropic" and has_anthropic:
+            return "anthropic"
+        if configured == "auto":
+            if has_openai:
+                return "openai"
+            if has_anthropic:
+                return "anthropic"
+        return None
+
+    async def _complete_openai(self, system: str, messages: list[dict[str, str]]) -> str | None:
+        api_key = (self.settings.openai_api_key or "").strip()
+        if not api_key:
+            return None
+        try:
+            client = AsyncOpenAI(api_key=api_key)
+            response = await client.chat.completions.create(
+                model=self.settings.openai_model,
+                max_tokens=self.settings.tutor_max_tokens,
+                temperature=0.3,
+                messages=[{"role": "system", "content": system}, *messages],
+            )
+            return response.choices[0].message.content or "I could not generate a response."
+        except (OpenAIAuthError, OpenAIAPIError):
+            if self.settings.app_env == "production":
+                raise
+            return None
+
+    async def _complete_anthropic(self, system: str, messages: list[dict[str, str]]) -> str | None:
+        api_key = (self.settings.anthropic_api_key or "").strip()
+        if not api_key:
+            return None
+        try:
+            client = AsyncAnthropic(api_key=api_key)
+            response = await client.messages.create(
+                model=self.settings.tutor_model,
+                max_tokens=self.settings.tutor_max_tokens,
+                temperature=0.3,
+                system=system,
+                messages=messages,
+            )
+            parts = [block.text for block in response.content if hasattr(block, "text")]
+            return "\n".join(parts) if parts else "I could not generate a response."
+        except (AuthenticationError, APIError):
+            if self.settings.app_env == "production":
+                raise
+            return None
 
     def _mock_response(self, message: str, exercise_context: str | None) -> str:
         """Offline fallback when ANTHROPIC_API_KEY is unset (dev/CI)."""
         hint = (
-            "**Python Tutor (offline mode)** — set `ANTHROPIC_API_KEY` for live responses.\n\n"
+            "**Python Tutor (offline mode)** — set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` "
+            "for live responses.\n\n"
         )
         if exercise_context:
             hint += (

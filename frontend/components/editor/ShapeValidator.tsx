@@ -83,7 +83,7 @@ function validateShape(code: string, expectedShape: string | null): ValidationRe
   if (hints.length === 0) {
     return {
       status: "fail",
-      message: `Add \`print(tensor.shape)\` or construct tensors with shape ${expectedShape}.`,
+      message: `Add \`print(...)\` to show output shape or structure matching ${expectedShape}.`,
     };
   }
 

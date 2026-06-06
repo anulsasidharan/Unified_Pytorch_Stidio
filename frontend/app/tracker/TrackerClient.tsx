@@ -153,7 +153,7 @@ export function TrackerClient() {
 
       {progress && (
         <div>
-          <h2 className="text-lg font-semibold">All modules</h2>
+          <h2 className="text-lg font-semibold">Python module progress</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {progress.modules.map((m) => (
               <div
