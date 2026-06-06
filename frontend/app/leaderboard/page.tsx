@@ -9,20 +9,29 @@ const PERIODS = [
   { id: "all_time", label: "All time" },
 ] as const;
 
+type PeriodId = (typeof PERIODS)[number]["id"];
+
 export default function LeaderboardPage() {
-  const [period, setPeriod] = useState<(typeof PERIODS)[number]["id"]>("weekly");
-  const [data, setData] = useState<LeaderboardData | null>(null);
+  const [period, setPeriod] = useState<PeriodId>("weekly");
+  const [cache, setCache] = useState<Partial<Record<PeriodId, LeaderboardData>>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const data = cache[period] ?? null;
+
   useEffect(() => {
+    if (cache[period]) {
+      setLoading(false);
+      return;
+    }
+
     let cancelled = false;
     setLoading(true);
     api
       .getLeaderboard(period)
       .then((res) => {
         if (!cancelled) {
-          setData(res);
+          setCache((prev) => ({ ...prev, [period]: res }));
           setError(null);
         }
       })
@@ -34,9 +43,11 @@ export default function LeaderboardPage() {
       .finally(() => {
         if (!cancelled) setLoading(false);
       });
+
     return () => {
       cancelled = true;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- cache lookup is intentional per period
   }, [period]);
 
   return (
@@ -71,10 +82,16 @@ export default function LeaderboardPage() {
         </p>
       )}
 
-      {loading && <p className="text-sm text-[var(--text-muted)]">Loading rankings…</p>}
+      {loading && !data && (
+        <p className="text-sm text-[var(--text-muted)]">Loading rankings…</p>
+      )}
 
-      {!loading && data && (
-        <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+      {data && (
+        <div
+          className={`overflow-x-auto rounded-xl border border-[var(--border)] transition-opacity ${
+            loading ? "opacity-60" : "opacity-100"
+          }`}
+        >
           <table className="w-full min-w-[320px] text-left text-sm">
             <thead className="border-b border-[var(--border)] bg-[var(--card-bg)]">
               <tr>

@@ -1,58 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { HeatmapCalendar } from "@/components/tracker/HeatmapCalendar";
 import { ProgressRing } from "@/components/tracker/ProgressRing";
 import { StreakCounter } from "@/components/tracker/StreakCounter";
 import { WeeklyChart } from "@/components/tracker/WeeklyChart";
-import { api } from "@/lib/api";
-import { getAccessToken } from "@/lib/auth";
-import { useProgressStore } from "@/store/useProgressStore";
+import { useTrackerData } from "@/lib/hooks/useTrackerData";
 
 export function DashboardClient() {
-  const token = getAccessToken();
-  const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-  const dashboard = useProgressStore((s) => s.dashboard);
-  const progress = useProgressStore((s) => s.progress);
-  const setDashboard = useProgressStore((s) => s.setDashboard);
-  const setProgress = useProgressStore((s) => s.setProgress);
-  const [heatmap, setHeatmap] = useState<Awaited<ReturnType<typeof api.getHeatmap>> | null>(
-    null,
-  );
-
-  useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      return;
-    }
-    let cancelled = false;
-    (async () => {
-      try {
-        const [dash, prog, heat] = await Promise.all([
-          api.getDashboard(token),
-          api.getProgress(token),
-          api.getHeatmap(token),
-        ]);
-        if (!cancelled) {
-          setDashboard(dash);
-          setProgress(prog);
-          setHeatmap(heat);
-          setError(null);
-        }
-      } catch (e) {
-        if (!cancelled) {
-          setError(e instanceof Error ? e.message : "Failed to load dashboard");
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [token, setDashboard, setProgress]);
+  const { token, dashboard, progress, heatmap, loading, isRefreshing, error } = useTrackerData();
 
   if (!token) {
     return (
@@ -84,6 +40,11 @@ export function DashboardClient() {
 
   return (
     <div className="space-y-8">
+      {isRefreshing && (
+        <p className="text-xs text-slate-500" aria-live="polite">
+          Refreshing…
+        </p>
+      )}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5">
           <p className="text-xs font-medium uppercase text-slate-500">Today&apos;s goal</p>
