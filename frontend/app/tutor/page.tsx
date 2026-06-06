@@ -32,9 +32,9 @@ export default function TutorPage() {
         <Link href="/modules" className="text-sm text-indigo-400 hover:text-indigo-300">
           ← Modules
         </Link>
-        <h1 className="mt-2 text-2xl font-bold">PyTorch AI Tutor</h1>
+        <h1 className="mt-2 text-2xl font-bold">Python AI Tutor</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Debug code, explain autograd, and review architectures. Powered by Claude.
+          Debug code, explain Python concepts, and review your solutions. Powered by Claude.
         </p>
         {exerciseContext && (
           <p className="mt-2 text-sm text-indigo-300">
@@ -44,9 +44,9 @@ export default function TutorPage() {
       </div>
 
       <ul className="grid gap-2 text-sm text-slate-400 sm:grid-cols-2">
-        <li>• Shape traces for dimension mismatches</li>
-        <li>• Training loop completeness checks</li>
-        <li>• Architecture and optimizer guidance</li>
+        <li>• Debug Python errors with line-level explanation</li>
+        <li>• PEP 8 and Pythonic code review</li>
+        <li>• Explain built-ins, libraries, and idioms</li>
         <li>• Progressive hints (no full solutions on first ask)</li>
       </ul>
 

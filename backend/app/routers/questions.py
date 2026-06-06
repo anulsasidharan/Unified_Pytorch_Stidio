@@ -15,13 +15,15 @@ from app.schemas.questions import QuestionDetail, QuestionListItem, SolutionOut,
 router = APIRouter(prefix="/questions", tags=["questions"])
 
 DEFAULT_HINTS = [
-    "Re-read the problem constraints before changing your approach.",
-    "Print tensor `.shape` and `.dtype` at each step to debug mismatches.",
-    "Check the PyTorch docs for the function signature you are using.",
+    "Re-read the problem statement carefully before changing your approach.",
+    "Add a print() call to inspect intermediate values at each step.",
+    "Check the Python docs for the built-in function or method you are using.",
 ]
 
 
 def _build_hints(question: Question) -> list[str]:
+    if getattr(question, "hints", None):
+        return list(question.hints)
     if question.constraints:
         return [question.constraints, *DEFAULT_HINTS[:2]]
     return DEFAULT_HINTS
@@ -156,7 +158,11 @@ async def get_question(question_id: int, db: AsyncSession = Depends(get_db)) -> 
         problem_statement=question.problem_statement,
         constraints=question.constraints,
         starter_code=question.starter_code,
+        expected_output=question.expected_output,
+        expected_output_type=getattr(question, "expected_output_type", "exact") or "exact",
         expected_output_shape=question.expected_output_shape,
+        run_in_browser=getattr(question, "run_in_browser", True),
+        pep8_required=getattr(question, "pep8_required", False),
         gpu_required=question.gpu_required,
         colab_link=question.colab_link or None,
         pytorch_version=question.pytorch_version,

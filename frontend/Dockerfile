@@ -9,4 +9,7 @@ COPY . .
 
 EXPOSE 3000
 
-CMD ["npm", "run", "dev", "--", "-H", "0.0.0.0", "-p", "3000", "--turbo"]
+ENV HOSTNAME=0.0.0.0
+ENV PORT=3000
+
+CMD ["npm", "run", "dev"]

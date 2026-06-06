@@ -40,7 +40,11 @@ class QuestionDetail(BaseModel):
     problem_statement: str
     constraints: str | None
     starter_code: str | None
+    expected_output: str | None = None
+    expected_output_type: str = "exact"
     expected_output_shape: str | None
+    run_in_browser: bool = True
+    pep8_required: bool = False
     gpu_required: bool
     colab_link: str | None
     pytorch_version: str

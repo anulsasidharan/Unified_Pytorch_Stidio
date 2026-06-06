@@ -16,12 +16,18 @@ const NOTE_TYPES = [
 ];
 
 export function UserNotes({ questionId }: Props) {
-  const token = getAccessToken();
+  const [token, setToken] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [notes, setNotes] = useState<UserNote[]>([]);
   const [content, setContent] = useState("");
   const [noteType, setNoteType] = useState("personal");
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    setToken(getAccessToken());
+    setMounted(true);
+  }, []);
 
   const load = useCallback(async () => {
     if (!token) return;
@@ -30,10 +36,11 @@ export function UserNotes({ questionId }: Props) {
   }, [token, questionId]);
 
   useEffect(() => {
+    if (!mounted || !token) return;
     load().catch(() => {});
-  }, [load]);
+  }, [load, mounted, token]);
 
-  if (!token) {
+  if (!mounted || !token) {
     return (
       <p className="text-sm text-slate-500">
         <Link href="/login" className="text-indigo-400 hover:underline">

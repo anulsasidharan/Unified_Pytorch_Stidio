@@ -6,11 +6,13 @@ import time
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
+from app.deps import get_optional_user
 from app.models.question import Question
+from app.models.user import User
 from app.services.grader import grade_batch, grade_submission
 from app.services.linter import lint_code
 from app.services.sandbox import run_python_sandbox
@@ -58,6 +60,7 @@ class BatchExecuteResponse(BaseModel):
 async def execute_code(
     body: ExecuteRequest,
     db: AsyncSession = Depends(get_db),
+    user: User | None = Depends(get_optional_user),
 ) -> ExecuteResponse:
     time_limit = body.time_limit_ms / 1000.0
     started = time.perf_counter()
@@ -77,6 +80,32 @@ async def execute_code(
             is_correct = grade.passed
             if getattr(question, "pep8_required", False) and lint.score < 100:
                 is_correct = False
+
+    # Persist submission (best-effort — ignore if table not yet available)
+    try:
+        await db.execute(
+            text("""
+                INSERT INTO code_submissions
+                    (user_id, question_id, code, stdout, stderr, is_correct,
+                     execution_time_ms, pep8_score)
+                VALUES
+                    (:user_id, :question_id, :code, :stdout, :stderr, :is_correct,
+                     :exec_ms, :pep8_score)
+            """),
+            {
+                "user_id": str(user.id) if user else None,
+                "question_id": body.question_id,
+                "code": body.code,
+                "stdout": sandbox.stdout,
+                "stderr": sandbox.stderr,
+                "is_correct": is_correct,
+                "exec_ms": elapsed_ms,
+                "pep8_score": lint.score,
+            },
+        )
+        await db.commit()
+    except Exception:
+        await db.rollback()
 
     return ExecuteResponse(
         stdout=sandbox.stdout,

@@ -15,12 +15,12 @@ type Tab = "manual" | "csv" | "json" | "notebook";
 const SAMPLE_JSON = `{
   "questions": [
     {
-      "title": "Custom Tensor Norm",
-      "topic_slug": "tensors",
+      "title": "Fibonacci Generator",
+      "topic_slug": "loops",
       "difficulty": "intermediate",
-      "problem_statement": "Implement L2 norm without torch.norm",
-      "starter_code": "import torch\\nx = torch.randn(3, 4)\\n# YOUR CODE HERE",
-      "tags": ["tensors", "custom"]
+      "problem_statement": "Implement a generator that yields Fibonacci numbers indefinitely.",
+      "starter_code": "def fibonacci():\\n    # YOUR CODE HERE\\n    pass",
+      "tags": ["loops", "generators"]
     }
   ]
 }`;
