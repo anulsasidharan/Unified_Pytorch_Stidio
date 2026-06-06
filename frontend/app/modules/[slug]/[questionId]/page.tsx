@@ -83,6 +83,8 @@ export default async function ExercisePage({ params }: Props) {
           starterCode={question.starter_code ?? "# Write your Python code here\n"}
           colabLink={question.colab_link}
           questionType={question.question_type}
+          expectedOutput={question.expected_output}
+          runInBrowser={question.run_in_browser}
           expectedOutputShape={question.expected_output_shape}
           hints={question.hints}
         />

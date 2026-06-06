@@ -23,7 +23,7 @@ async def get_colab_url(question_id: int, db: AsyncSession = Depends(get_db)) ->
     if question is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
 
-    module_name = question.topic.name if question.topic else "PyTorch Studio"
+    module_name = question.topic.name if question.topic else "Python Learning Studio"
     colab = resolve_colab_url(question, module_name)
 
     return {

@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth";
-import { CodeEditor } from "@/components/editor/CodeEditor";
+import { runPython } from "@/lib/pyodide-runner";
+import { CodeEditor, OutputPane, PEP8Badge, RunButton } from "@/components";
 import { ShapeValidator } from "@/components/editor/ShapeValidator";
 import { HintDrawer } from "@/components/question/HintDrawer";
 import { ColabLauncher } from "@/components/question/ColabLauncher";
@@ -18,6 +19,8 @@ type Props = {
   starterCode: string;
   colabLink: string | null;
   questionType: string;
+  expectedOutput: string | null;
+  runInBrowser: boolean;
   expectedOutputShape: string | null;
   hints: string[];
 };
@@ -29,14 +32,26 @@ export function ExerciseClient({
   starterCode,
   colabLink,
   questionType,
+  expectedOutput,
+  runInBrowser,
   expectedOutputShape,
   hints,
 }: Props) {
   const [code, setCode] = useState(starterCode);
   const [showTutor, setShowTutor] = useState(false);
+  const [running, setRunning] = useState(false);
+  const [stdout, setStdout] = useState("");
+  const [stderr, setStderr] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [executionTimeMs, setExecutionTimeMs] = useState<number | undefined>();
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitMsg, setSubmitMsg] = useState<string | null>(null);
   const [hintsRevealed, setHintsRevealed] = useState(0);
+  const [lintScore, setLintScore] = useState(100);
+  const [violations, setViolations] = useState<
+    { line: number; col: number; code: string; message: string }[]
+  >([]);
   const submitRef = useRef<() => void>(() => {});
   const setExerciseContext = useTutorStore((s) => s.setExerciseContext);
 
@@ -50,14 +65,86 @@ export function ExerciseClient({
     return () => setExerciseContext(null);
   }, [questionId, moduleName, title, code, setExerciseContext]);
 
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      if (!code.trim()) return;
+      try {
+        const res = await api.lintCode(code);
+        setLintScore(res.score);
+        setViolations(res.violations);
+      } catch {
+        /* optional */
+      }
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [code]);
+
   const revealHint = useCallback(() => {
     setHintsRevealed((n) => Math.min(n + 1, hints.length));
   }, [hints.length]);
+
+  const handleRun = useCallback(async () => {
+    setRunning(true);
+    setIsCorrect(null);
+    setSubmitMsg(null);
+    try {
+      let runStdout = "";
+      let runStderr = "";
+      let runError: string | null = null;
+      let elapsed: number | undefined;
+
+      if (runInBrowser) {
+        try {
+          const result = await runPython(code, 30000);
+          runStdout = result.stdout;
+          runStderr = result.stderr;
+          runError = result.error;
+          elapsed = result.executionTimeMs;
+        } catch {
+          const result = await api.executeCode({ code, question_id: questionId });
+          setStdout(result.stdout);
+          setStderr(result.stderr);
+          setError(null);
+          setExecutionTimeMs(result.execution_time_ms);
+          setIsCorrect(result.is_correct);
+          return;
+        }
+      } else {
+        const result = await api.executeCode({ code, question_id: questionId });
+        setStdout(result.stdout);
+        setStderr(result.stderr);
+        setError(null);
+        setExecutionTimeMs(result.execution_time_ms);
+        setIsCorrect(result.is_correct);
+        return;
+      }
+
+      setStdout(runStdout);
+      setStderr(runStderr);
+      setError(runError);
+      setExecutionTimeMs(elapsed);
+
+      const gradeResult = await api.executeCode({
+        code,
+        question_id: questionId,
+        stdout: runStdout,
+        stderr: runStderr,
+        execution_time_ms: elapsed,
+      });
+      setIsCorrect(gradeResult.is_correct);
+    } finally {
+      setRunning(false);
+    }
+  }, [code, questionId, runInBrowser]);
 
   const handleSubmit = useCallback(async () => {
     const token = getAccessToken();
     if (!token) {
       setSubmitMsg("Sign in to submit and earn XP.");
+      return;
+    }
+    if (isCorrect !== true && expectedOutput) {
+      setSubmitMsg("Run your code and pass the output check before submitting.");
       return;
     }
     setSubmitting(true);
@@ -66,7 +153,7 @@ export function ExerciseClient({
       const res = await api.submitAttempt(token, {
         question_id: questionId,
         code,
-        result: "correct",
+        result: isCorrect === true || !expectedOutput ? "correct" : "incorrect",
         time_spent_secs: 120,
         hints_used: hintsRevealed,
       });
@@ -80,7 +167,7 @@ export function ExerciseClient({
     } finally {
       setSubmitting(false);
     }
-  }, [questionId, code, hintsRevealed]);
+  }, [questionId, code, hintsRevealed, isCorrect, expectedOutput]);
 
   useEffect(() => {
     submitRef.current = handleSubmit;
@@ -169,7 +256,19 @@ export function ExerciseClient({
             </Link>
           </div>
         </div>
-        <CodeEditor value={code} onChange={setCode} />
+        <CodeEditor initialCode={starterCode} value={code} onCodeChange={setCode} />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <RunButton onRun={handleRun} running={running} />
+          <PEP8Badge score={lintScore} violations={violations} />
+        </div>
+        <OutputPane
+          stdout={stdout}
+          stderr={stderr}
+          error={error}
+          isCorrect={expectedOutput ? isCorrect : null}
+          executionTimeMs={executionTimeMs}
+          expectedOutput={expectedOutput}
+        />
         {(questionType === "shape_assertion" || expectedOutputShape) && (
           <ShapeValidator code={code} expectedShape={expectedOutputShape} />
         )}
@@ -181,7 +280,7 @@ export function ExerciseClient({
             onClick={handleSubmit}
             className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-50"
           >
-            {submitting ? "Submitting…" : "Mark correct"}
+            {submitting ? "Submitting…" : "Submit answer"}
           </button>
           {submitMsg && <p className="text-xs text-[var(--text-muted)]">{submitMsg}</p>}
         </div>

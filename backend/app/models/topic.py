@@ -25,3 +25,4 @@ class Topic(Base):
 
     questions = relationship("Question", back_populates="topic")
     progress = relationship("UserProgress", back_populates="topic")
+    project_submissions = relationship("ProjectSubmission", back_populates="topic")

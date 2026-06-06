@@ -4,9 +4,17 @@ type Props = {
   onRun: () => void | Promise<void>;
   running?: boolean;
   disabled?: boolean;
+  label?: string;
+  runningLabel?: string;
 };
 
-export function RunButton({ onRun, running = false, disabled = false }: Props) {
+export function RunButton({
+  onRun,
+  running = false,
+  disabled = false,
+  label = "▶ Run",
+  runningLabel = "Running…",
+}: Props) {
   return (
     <button
       type="button"
@@ -17,10 +25,10 @@ export function RunButton({ onRun, running = false, disabled = false }: Props) {
       {running ? (
         <>
           <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
-          Running…
+          {runningLabel}
         </>
       ) : (
-        <>▶ Run</>
+        <>{label}</>
       )}
     </button>
   );

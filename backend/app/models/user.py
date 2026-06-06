@@ -39,3 +39,4 @@ class User(Base):
     revision_items = relationship("RevisionQueue", back_populates="user")
     notes = relationship("UserNote", back_populates="user")
     custom_questions = relationship("CustomQuestion", back_populates="user")
+    project_submissions = relationship("ProjectSubmission", back_populates="user")

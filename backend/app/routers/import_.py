@@ -31,6 +31,7 @@ from app.services.import_service import (
     list_custom_questions,
     parse_csv_content,
     parse_json_payload,
+    parse_py_content,
     persist_custom_questions,
     resolve_topic_id,
 )
@@ -152,6 +153,34 @@ async def import_csv(
         saved = [r[0] for r in results if r[0] is not None]
         slug_map = await _topic_slug_map(db, saved)
         return _build_import_response("csv", results, False, saved, slug_map)
+    except ImportValidationError as exc:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
+
+
+@router.post("/import/py", response_model=ImportResponse)
+async def import_py(
+    file: UploadFile = File(...),
+    preview: bool = False,
+    user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> ImportResponse:
+    raw = await file.read()
+    try:
+        text = raw.decode("utf-8-sig")
+    except UnicodeDecodeError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST, detail=".py file must be UTF-8 encoded"
+        ) from exc
+
+    try:
+        items = parse_py_content(text)
+        if preview:
+            preview_results = [(None, ImportRowResult(title=i.title, status="preview")) for i in items]
+            return _build_import_response("py", preview_results, preview=True)
+        results = await persist_custom_questions(db, user, items, "py")
+        saved = [r[0] for r in results if r[0] is not None]
+        slug_map = await _topic_slug_map(db, saved)
+        return _build_import_response("py", results, False, saved, slug_map)
     except ImportValidationError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
 
