@@ -13,6 +13,7 @@ from app.routers import (
     execute,
     import_,
     lint,
+    modules,
     notes,
     progress,
     questions,
@@ -63,6 +64,7 @@ api_router.include_router(import_.router)
 api_router.include_router(notes.router)
 api_router.include_router(execute.router)
 api_router.include_router(lint.router)
+api_router.include_router(modules.router)
 api_router.include_router(snippets.router)
 app.include_router(api_router)
 

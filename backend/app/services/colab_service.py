@@ -32,12 +32,12 @@ def _notebook_json(question: Question, module_name: str) -> str:
     )
     nb.cells.append(
         nbformat.v4.new_code_cell(
-            "# PyTorch is pre-installed on Colab\n"
-            "# !pip install torch torchvision --upgrade"
+            "# Python 3 is pre-installed on Colab\n"
+            "# !pip install <package>  # uncomment if you need extra packages"
         )
     )
     nb.cells.append(
-        nbformat.v4.new_code_cell(question.starter_code or "# Your code here\nimport torch")
+        nbformat.v4.new_code_cell(question.starter_code or "# Your code here\n")
     )
     if question.constraints:
         nb.cells.append(
@@ -46,7 +46,7 @@ def _notebook_json(question: Question, module_name: str) -> str:
     return nbformat.writes(nb, version=nbformat.NO_CONVERT)
 
 
-def generate_colab_url(question: Question, module_name: str = "PyTorch Studio") -> str:
+def generate_colab_url(question: Question, module_name: str = "Python Learning Studio") -> str:
     """Build a Colab-open URL from an in-memory notebook."""
     settings = get_settings()
     nb_str = _notebook_json(question, module_name)
@@ -64,7 +64,7 @@ def resolve_colab_url(question: Question, module_name: str | None = None) -> Col
             nbviewer = f"{settings.nbviewer_base_url}{link}"
         return ColabResult(colab_url=link, nbviewer_url=nbviewer, source="stored")
 
-    name = module_name or "PyTorch Studio"
+    name = module_name or "Python Learning Studio"
     url = generate_colab_url(question, name)
     return ColabResult(colab_url=url, nbviewer_url=None, source="generated")
 

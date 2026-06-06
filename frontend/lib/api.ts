@@ -185,12 +185,59 @@ export type ProgressSummary = {
     questions_attempted: number;
     questions_solved: number;
     completion_pct: number;
+    basic_solved: number;
+    intermediate_solved: number;
+    advanced_solved: number;
   }[];
   totals: {
     questions_attempted: number;
     questions_solved: number;
     completion_pct: number;
   };
+};
+
+export type TopicProgressDetail = {
+  topic_id: number;
+  slug: string;
+  name: string;
+  total_questions: number;
+  questions_attempted: number;
+  questions_solved: number;
+  completion_pct: number;
+  basic_solved: number;
+  intermediate_solved: number;
+  advanced_solved: number;
+  total_time_spent_secs: number;
+};
+
+export type TestCaseItem = {
+  id: number;
+  input_data: Record<string, unknown>;
+  expected_output: Record<string, unknown>;
+  explanation: string | null;
+  is_hidden: boolean;
+  order_index: number;
+};
+
+export type ModuleProjectResponse = {
+  spec: {
+    slug: string;
+    module_name: string;
+    title: string;
+    description: string;
+    starter_code: string;
+    requirements: string[];
+  };
+  submission: {
+    code: string;
+    score: number;
+    is_passed: boolean;
+    feedback: string | null;
+    pep8_score: number | null;
+    stdout: string | null;
+    stderr: string | null;
+    submitted_at: string;
+  } | null;
 };
 
 export type HeatmapData = {
@@ -260,6 +307,25 @@ export const api = {
 
   getProgress: (token: string) =>
     request<ProgressSummary>("/progress", {}, token),
+
+  getTopicProgress: (token: string, slug: string) =>
+    request<TopicProgressDetail>(`/progress/topic/${slug}`, {}, token),
+
+  getModuleProject: (token: string | null, slug: string) =>
+    request<ModuleProjectResponse>(`/modules/${slug}/project`, {}, token),
+
+  submitModuleProject: (token: string, slug: string, code: string) =>
+    request<{
+      score: number;
+      is_passed: boolean;
+      feedback: string | null;
+      pep8_score: number | null;
+      stdout: string | null;
+      stderr: string | null;
+    }>(`/modules/${slug}/project`, { method: "POST", body: JSON.stringify({ code }) }, token),
+
+  getTestCases: (questionId: number) =>
+    request<TestCaseItem[]>(`/questions/${questionId}/test-cases`, { revalidate: 600 }),
 
   getHeatmap: (token: string) =>
     request<HeatmapData>("/tracker/heatmap", {}, token),
@@ -372,6 +438,13 @@ export const api = {
   importCsv: (token: string, file: File, preview = false) =>
     requestForm<ImportResponse>(
       `/import/csv?preview=${preview}`,
+      file,
+      token,
+    ),
+
+  importPy: (token: string, file: File, preview = false) =>
+    requestForm<ImportResponse>(
+      `/import/py?preview=${preview}`,
       file,
       token,
     ),

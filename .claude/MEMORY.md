@@ -132,3 +132,4 @@
 | 2026-06-03 | Phase 5 complete: questions_modules_08_13 + bulk_expand seeds, GET /questions/search, /exercises page, HintDrawer + shortcuts, ThemeProvider + AppHeader |
 | 2026-06-06 | Python fork Phase 1 complete: `bootstrap_db.py`, dedupe wired via `ensure_topics` + entrypoint, 25 active Python modules verified (Docker + host) |
 | 2026-06-06 | Python fork Phase 3 complete: 610 questions seeded (modules 01–25), 100 snippets in `backend/data/snippets.json`, Python lesson curricula in `frontend/lib/lessons/content/python-curriculum.ts` |
+| 2026-06-06 | Python fork Phase 4 complete: batch grader UI, module project API/submissions (`project_submissions` migration 003), `.py` import, Colab Python notebooks, ModuleProgressRing, ExerciseClient Pyodide migration |

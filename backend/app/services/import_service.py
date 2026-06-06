@@ -6,6 +6,7 @@ import csv
 import io
 import json
 import re
+import ast
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
@@ -152,6 +153,119 @@ def parse_json_payload(data: dict) -> list[ParsedQuestion]:
             )
         )
     return parsed
+
+
+def _question_dict_to_parsed(item: dict, idx: int) -> ParsedQuestion:
+    title = (item.get("title") or "").strip()
+    statement = (item.get("problem_statement") or "").strip()
+    if not title or not statement:
+        raise ImportValidationError(f"Question {idx}: title and problem_statement are required")
+
+    starter = item.get("starter_code") or item.get("solution_code")
+    solutions = item.get("solutions") or []
+    if not starter and solutions:
+        starter = solutions[0].get("code") if isinstance(solutions[0], dict) else None
+
+    difficulty = _validate_difficulty(item.get("difficulty"))
+    return ParsedQuestion(
+        title=title,
+        topic_slug=(item.get("topic_slug") or "").strip() or None,
+        difficulty=difficulty,
+        problem_statement=statement,
+        solution_code=(starter or "").strip() or None,
+        colab_link=(item.get("colab_link") or "").strip() or None,
+        tags=_normalize_tags(item.get("tags")),
+    )
+
+
+def parse_py_content(content: str) -> list[ParsedQuestion]:
+    """Parse a .py file into one or more importable questions.
+
+    Supports:
+    1. Bulk seed format: ``QUESTIONS = [{...}, ...]``
+    2. Single exercise with comment metadata and string variables
+    """
+    content = content.strip()
+    if not content:
+        raise ImportValidationError(".py file is empty")
+
+    # Bulk format: extract QUESTIONS list via AST
+    questions_match = re.search(r"^QUESTIONS\s*=\s*\[", content, re.MULTILINE)
+    if questions_match:
+        try:
+            tree = ast.parse(content)
+        except SyntaxError as exc:
+            raise ImportValidationError(f"Invalid Python syntax: {exc}") from exc
+
+        for node in tree.body:
+            if isinstance(node, ast.Assign):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id == "QUESTIONS":
+                        try:
+                            raw_list = ast.literal_eval(node.value)
+                        except (ValueError, SyntaxError) as exc:
+                            raise ImportValidationError(
+                                "QUESTIONS must be a static list of dicts"
+                            ) from exc
+                        if not isinstance(raw_list, list) or not raw_list:
+                            raise ImportValidationError("QUESTIONS must be a non-empty list")
+                        if len(raw_list) > CSV_MAX_ROWS:
+                            raise ImportValidationError(
+                                f".py import exceeds maximum of {CSV_MAX_ROWS} questions"
+                            )
+                        return [
+                            _question_dict_to_parsed(item, idx)
+                            for idx, item in enumerate(raw_list, start=1)
+                            if isinstance(item, dict)
+                        ]
+
+    # Single-question format with # metadata comments
+    meta: dict[str, str] = {}
+    for line in content.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("#") and ":" in stripped:
+            key, _, val = stripped.lstrip("#").partition(":")
+            meta[key.strip().lower()] = val.strip()
+
+    title = meta.get("title") or meta.get("question")
+    topic_slug = meta.get("topic_slug") or meta.get("topic")
+    difficulty = meta.get("difficulty")
+
+    # Extract triple-quoted docstring as problem_statement
+    doc_match = re.search(r'^\s*"""(.*?)"""', content, re.DOTALL | re.MULTILINE)
+    problem_statement = doc_match.group(1).strip() if doc_match else ""
+
+    # Extract starter_code and expected_output assignments
+    starter_match = re.search(
+        r"starter_code\s*=\s*(['\"]{3}.*?['\"]{3}|['\"].*?['\"])",
+        content,
+        re.DOTALL,
+    )
+    starter_code = None
+    if starter_match:
+        try:
+            starter_code = ast.literal_eval(starter_match.group(1))
+        except (ValueError, SyntaxError):
+            starter_code = starter_match.group(1).strip("'\"")
+
+    if not title:
+        raise ImportValidationError(
+            "Single .py import requires '# title: ...' comment or QUESTIONS list"
+        )
+    if not problem_statement:
+        problem_statement = f"Complete the exercise: {title}"
+
+    return [
+        ParsedQuestion(
+            title=title,
+            topic_slug=topic_slug or None,
+            difficulty=_validate_difficulty(difficulty),
+            problem_statement=problem_statement,
+            solution_code=starter_code,
+            colab_link=meta.get("colab_link") or None,
+            tags=_normalize_tags(meta.get("tags")),
+        )
+    ]
 
 
 def resolve_notebook_fetch_url(url: str) -> str:

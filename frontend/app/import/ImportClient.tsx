@@ -10,7 +10,7 @@ import {
 } from "@/lib/api";
 import { getAccessToken } from "@/lib/auth";
 
-type Tab = "manual" | "csv" | "json" | "notebook";
+type Tab = "manual" | "csv" | "json" | "notebook" | "py";
 
 const SAMPLE_JSON = `{
   "questions": [
@@ -44,6 +44,7 @@ export function ImportClient() {
   });
   const [jsonText, setJsonText] = useState(SAMPLE_JSON);
   const [csvFile, setCsvFile] = useState<File | null>(null);
+  const [pyFile, setPyFile] = useState<File | null>(null);
   const [notebook, setNotebook] = useState({
     url: "",
     topic_slug: "",
@@ -94,6 +95,9 @@ export function ImportClient() {
       } else if (tab === "csv") {
         if (!csvFile) throw new Error("Choose a CSV file first");
         res = await api.importCsv(token, csvFile, preview);
+      } else if (tab === "py") {
+        if (!pyFile) throw new Error("Choose a .py file first");
+        res = await api.importPy(token, pyFile, preview);
       } else {
         res = await api.importNotebook(token, { ...notebook, preview });
       }
@@ -112,6 +116,7 @@ export function ImportClient() {
     { id: "manual", label: "Manual Entry" },
     { id: "csv", label: "CSV" },
     { id: "json", label: "JSON" },
+    { id: "py", label: "Python (.py)" },
     { id: "notebook", label: "Notebook URL" },
   ];
 
@@ -239,6 +244,23 @@ export function ImportClient() {
               className="w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-sm"
               value={jsonText}
               onChange={(e) => setJsonText(e.target.value)}
+            />
+          </div>
+        )}
+
+        {tab === "py" && (
+          <div className="space-y-3">
+            <p className="text-sm text-slate-400">
+              Upload a <code className="text-indigo-300">.py</code> file with either a{" "}
+              <code className="text-indigo-300">QUESTIONS = [...]</code> list (seed format) or
+              comment metadata (<code className="text-indigo-300"># title:</code>,{" "}
+              <code className="text-indigo-300"># topic:</code>) plus a docstring.
+            </p>
+            <input
+              type="file"
+              accept=".py,text/x-python"
+              onChange={(e) => setPyFile(e.target.files?.[0] ?? null)}
+              className="block w-full text-sm text-slate-300"
             />
           </div>
         )}

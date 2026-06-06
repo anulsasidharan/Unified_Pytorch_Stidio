@@ -83,7 +83,7 @@
 ## Phase 4 — Advanced Features (Weeks 8–10)
 
 **Goal:** Projects, snippet library, batch grader UX, `.py` import, module progress API.  
-**Phase status:** ❌ Pending (5/12 tasks complete)
+**Phase status:** ✅ Completed (12/12 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -92,13 +92,13 @@
 | P4-3 · Snippets API — list, featured, detail, create (`/snippets/*`) | `feature/snippets-api` | ✅ Completed |
 | P4-4 · `SnippetCard.tsx` — preview, copy, open in editor | `feature/snippet-card` | ✅ Completed |
 | P4-5 · Batch grader API (`POST /execute/batch`) | `feature/batch-grader-api` | ✅ Completed |
-| P4-6 · Batch grader UI — multi test-case results on practice page | `feature/batch-grader-ui` | ❌ Pending |
-| P4-7 · Module progress API — `GET/POST /modules/{slug}/project` | `feature/module-project-api` | ❌ Pending |
-| P4-8 · Project submission flow + grading | `feature/project-submission` | ❌ Pending |
-| P4-9 · Question import from `.py` files (extend import pipeline) | `feature/py-file-import` | ❌ Pending |
-| P4-10 · Colab launcher — point to Python notebooks per question | `feature/python-colab` | ❌ Pending |
-| P4-11 · `ModuleProgressRing` component (Basic/Intermediate/Advanced %) | `feature/module-progress-ring` | ❌ Pending |
-| P4-12 · Migrate exercise page (`/modules/[slug]/[questionId]`) to Pyodide run flow | `feature/exercise-pyodide-migration` | ❌ Pending |
+| P4-6 · Batch grader UI — multi test-case results on practice page | `feature/batch-grader-ui` | ✅ Completed |
+| P4-7 · Module progress API — `GET/POST /modules/{slug}/project` | `feature/module-project-api` | ✅ Completed |
+| P4-8 · Project submission flow + grading | `feature/project-submission` | ✅ Completed |
+| P4-9 · Question import from `.py` files (extend import pipeline) | `feature/py-file-import` | ✅ Completed |
+| P4-10 · Colab launcher — point to Python notebooks per question | `feature/python-colab` | ✅ Completed |
+| P4-11 · `ModuleProgressRing` component (Basic/Intermediate/Advanced %) | `feature/module-progress-ring` | ✅ Completed |
+| P4-12 · Migrate exercise page (`/modules/[slug]/[questionId]`) to Pyodide run flow | `feature/exercise-pyodide-migration` | ✅ Completed |
 
 **Exit:** Snippet library populated; projects submittable; `.py` import works.
 
@@ -168,7 +168,7 @@
 | Phase 1 — Foundation Fork | ✅ Completed | 10 / 10 |
 | Phase 2 — Live Execution Engine | ✅ Completed | 12 / 12 |
 | Phase 3 — Content Seeding | ✅ Completed | 10 / 10 |
-| Phase 4 — Advanced Features | ❌ Pending | 5 / 12 |
+| Phase 4 — Advanced Features | ✅ Completed | 12 / 12 |
 | Phase 5 — Polish & Launch | ❌ Pending | 1 / 10 |
 | Phase 6 — Production | ❌ Pending | 0 / 6 |
 | Inherited baseline | ✅ Completed | 8 / 8 |

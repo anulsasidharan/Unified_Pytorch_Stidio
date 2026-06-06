@@ -2,18 +2,29 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { LearningPath } from "@/components/learn/LearningPath";
 import { ModuleExercisesSection } from "@/components/modules/ModuleExercisesSection";
+import { ModuleDetailClient } from "@/components/modules/ModuleDetailClient";
 import { getModuleCurriculum } from "@/lib/lessons";
 import { getModuleMeta } from "@/lib/module-meta";
+import { api } from "@/lib/api";
 
 export const revalidate = 3600;
 
 type Props = { params: { slug: string } };
 
-export default function ModuleDetailPage({ params }: Props) {
+export default async function ModuleDetailPage({ params }: Props) {
   const meta = getModuleMeta(params.slug);
   if (!meta) notFound();
 
   const curriculum = getModuleCurriculum(params.slug);
+
+  let totalQuestions = 24;
+  try {
+    const topics = await api.getTopics();
+    const topic = topics.find((t) => t.slug === params.slug);
+    if (topic) totalQuestions = topic.total_questions;
+  } catch {
+    /* use default */
+  }
 
   return (
     <div className="space-y-10">
@@ -43,13 +54,11 @@ export default function ModuleDetailPage({ params }: Props) {
         </div>
       </section>
 
-      <section className="rounded-xl border border-[var(--python-blue)]/30 bg-[var(--python-blue)]/5 p-5">
-        <h2 className="text-lg font-semibold">End-of-module project</h2>
-        <p className="mt-2 text-[var(--text-secondary)]">{meta.mini_project}</p>
-        <p className="mt-3 text-sm text-[var(--text-muted)]">
-          Complete practice questions at each level, then build this mini project to cement the concepts.
-        </p>
-      </section>
+      <ModuleDetailClient
+        slug={params.slug}
+        miniProject={meta.mini_project}
+        totalQuestions={totalQuestions}
+      />
 
       {curriculum ? (
         <>

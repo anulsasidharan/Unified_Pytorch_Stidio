@@ -2,13 +2,40 @@
 
 import { useCallback, useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { CodeEditor, OutputPane, PEP8Badge, RunButton } from "@/components";
-import { api, type QuestionDetail } from "@/lib/api";
+import { BatchResults, CodeEditor, OutputPane, PEP8Badge, RunButton } from "@/components";
+import type { BatchResultItem } from "@/components/BatchResults";
+import { api, type QuestionDetail, type TestCaseItem } from "@/lib/api";
 import { runPython } from "@/lib/pyodide-runner";
 
 type Props = {
   question: QuestionDetail;
 };
+
+function extractExpectedOutput(raw: Record<string, unknown>): string {
+  if (typeof raw.stdout === "string") return raw.stdout;
+  if (typeof raw.output === "string") return raw.output;
+  if (typeof raw.text === "string") return raw.text;
+  return JSON.stringify(raw);
+}
+
+function extractInputPrefix(raw: Record<string, unknown>): string {
+  if (typeof raw.setup === "string") return raw.setup;
+  if (typeof raw.stdin === "string") return raw.stdin;
+  if (typeof raw.input === "string") return raw.input;
+  return "";
+}
+
+function normalizeTestCases(cases: TestCaseItem[]) {
+  return cases.map((tc, idx) => ({
+    input: extractInputPrefix(tc.input_data),
+    expected_output: extractExpectedOutput(tc.expected_output),
+    check_type:
+      typeof tc.expected_output.check_type === "string"
+        ? tc.expected_output.check_type
+        : "exact",
+    label: tc.explanation ?? `Test case ${idx + 1}`,
+  }));
+}
 
 export function PracticeClient({ question }: Props) {
   const starter = question.starter_code ?? "# Write your Python code here\nprint('Hello, Python!')\n";
@@ -19,6 +46,11 @@ export function PracticeClient({ question }: Props) {
   const [error, setError] = useState<string | null>(null);
   const [executionTimeMs, setExecutionTimeMs] = useState<number | undefined>();
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  const [batchResults, setBatchResults] = useState<BatchResultItem[] | null>(null);
+  const [batchScore, setBatchScore] = useState<number | null>(null);
+  const [testCases, setTestCases] = useState<
+    { input: string; expected_output: string; check_type: string; label: string }[]
+  >([]);
   const [lintScore, setLintScore] = useState(100);
   const [violations, setViolations] = useState<
     { line: number; col: number; code: string; message: string }[]
@@ -27,6 +59,25 @@ export function PracticeClient({ question }: Props) {
 
   const expectedOutput = question.expected_output ?? null;
   const timeLimit = question.time_estimate_mins ? question.time_estimate_mins * 60 * 1000 : 30000;
+  const hasBatchTests = testCases.length > 0;
+
+  useEffect(() => {
+    api
+      .getTestCases(question.id)
+      .then((cases) => setTestCases(normalizeTestCases(cases)))
+      .catch(() => {
+        if (expectedOutput) {
+          setTestCases([
+            {
+              input: "",
+              expected_output: expectedOutput,
+              check_type: question.expected_output_type ?? "exact",
+              label: "Expected output",
+            },
+          ]);
+        }
+      });
+  }, [question.id, expectedOutput, question.expected_output_type]);
 
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -48,7 +99,36 @@ export function PracticeClient({ question }: Props) {
   const handleRun = useCallback(async () => {
     setRunning(true);
     setIsCorrect(null);
+    setBatchResults(null);
+    setBatchScore(null);
     try {
+      if (hasBatchTests) {
+        const batch = await api.executeBatch({
+          code,
+          test_cases: testCases.map(({ input, expected_output, check_type }) => ({
+            input,
+            expected_output,
+            check_type,
+          })),
+        });
+        const labeled: BatchResultItem[] = batch.results.map((r, idx) => ({
+          ...r,
+          label: testCases[idx]?.label,
+        }));
+        setBatchResults(labeled);
+        setBatchScore(batch.score);
+        setIsCorrect(batch.score >= 100);
+
+        if (question.id) {
+          await api.executeCode({
+            code,
+            question_id: question.id,
+            stdout: batch.results.map((r) => r.actual_output).join("\n"),
+          });
+        }
+        return;
+      }
+
       let runStdout = "";
       let runStderr = "";
       let runError: string | null = null;
@@ -108,7 +188,7 @@ export function PracticeClient({ question }: Props) {
     } finally {
       setRunning(false);
     }
-  }, [code, timeLimit, question.id, question.run_in_browser]);
+  }, [code, timeLimit, question.id, question.run_in_browser, hasBatchTests, testCases]);
 
   return (
     <div className="space-y-4">
@@ -122,14 +202,19 @@ export function PracticeClient({ question }: Props) {
       </div>
 
       <CodeEditor initialCode={starter} value={code} onCodeChange={setCode} height="420px" />
-      <OutputPane
-        stdout={stdout}
-        stderr={stderr}
-        error={error}
-        isCorrect={expectedOutput ? isCorrect : null}
-        executionTimeMs={executionTimeMs}
-        expectedOutput={expectedOutput}
-      />
+
+      {batchResults && batchScore !== null ? (
+        <BatchResults results={batchResults} score={batchScore} />
+      ) : (
+        <OutputPane
+          stdout={stdout}
+          stderr={stderr}
+          error={error}
+          isCorrect={expectedOutput || hasBatchTests ? isCorrect : null}
+          executionTimeMs={executionTimeMs}
+          expectedOutput={expectedOutput}
+        />
+      )}
     </div>
   );
 }
