@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import ReactMarkdown from "react-markdown";
 import { ExerciseClient } from "./ExerciseClient";
 import { LessonPrimer } from "@/components/learn/LessonPrimer";
@@ -7,6 +7,7 @@ import { UserNotes } from "@/components/notes/UserNotes";
 import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { getLessonForQuestion } from "@/lib/lessons";
 import { api } from "@/lib/api";
+import { getExerciseHref } from "@/lib/utils";
 
 export const revalidate = 600;
 
@@ -25,6 +26,11 @@ export default async function ExercisePage({ params }: Props) {
 
   if (question.topic_slug !== params.slug) {
     notFound();
+  }
+
+  const practiceHref = getExerciseHref(params.slug, question.id, question.question_type);
+  if (practiceHref.startsWith("/practice/")) {
+    redirect(practiceHref);
   }
 
   const primerLesson = getLessonForQuestion(

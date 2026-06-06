@@ -6,14 +6,15 @@ import time
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
-from sqlalchemy import select, text
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
 from app.deps import get_optional_user
 from app.models.question import Question
 from app.models.user import User
-from app.services.grader import grade_batch, grade_submission
+from app.services.execute_service import grade_question_output, persist_code_submission
+from app.services.grader import grade_batch
 from app.services.linter import lint_code
 from app.services.sandbox import run_python_sandbox
 
@@ -24,6 +25,9 @@ class ExecuteRequest(BaseModel):
     code: str
     question_id: int | None = None
     time_limit_ms: int = Field(default=5000, ge=100, le=30000)
+    stdout: str | None = None
+    stderr: str | None = None
+    execution_time_ms: int | None = None
 
 
 class ExecuteResponse(BaseModel):
@@ -56,60 +60,55 @@ class BatchExecuteResponse(BaseModel):
     score: int
 
 
+async def _load_question(db: AsyncSession, question_id: int) -> Question:
+    result = await db.execute(select(Question).where(Question.id == question_id))
+    question = result.scalar_one_or_none()
+    if question is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
+    return question
+
+
 @router.post("", response_model=ExecuteResponse)
 async def execute_code(
     body: ExecuteRequest,
     db: AsyncSession = Depends(get_db),
     user: User | None = Depends(get_optional_user),
 ) -> ExecuteResponse:
-    time_limit = body.time_limit_ms / 1000.0
-    started = time.perf_counter()
-    sandbox = run_python_sandbox(body.code, time_limit=time_limit)
-    elapsed_ms = int((time.perf_counter() - started) * 1000)
     lint = lint_code(body.code)
+    question: Question | None = None
+
+    if body.stdout is not None:
+        stdout = body.stdout
+        stderr = body.stderr or ""
+        elapsed_ms = body.execution_time_ms or 0
+    else:
+        time_limit = body.time_limit_ms / 1000.0
+        started = time.perf_counter()
+        sandbox = run_python_sandbox(body.code, time_limit=time_limit)
+        elapsed_ms = int((time.perf_counter() - started) * 1000)
+        stdout = sandbox.stdout
+        stderr = sandbox.stderr
 
     is_correct: bool | None = None
     if body.question_id is not None:
-        result = await db.execute(select(Question).where(Question.id == body.question_id))
-        question = result.scalar_one_or_none()
-        if question is None:
-            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Question not found")
-        if question.expected_output:
-            check_type = getattr(question, "expected_output_type", None) or "exact"
-            grade = grade_submission(sandbox.stdout, question.expected_output, check_type)
-            is_correct = grade.passed
-            if getattr(question, "pep8_required", False) and lint.score < 100:
-                is_correct = False
+        question = await _load_question(db, body.question_id)
+        is_correct = grade_question_output(question, stdout, lint)
 
-    # Persist submission (best-effort — ignore if table not yet available)
-    try:
-        await db.execute(
-            text("""
-                INSERT INTO code_submissions
-                    (user_id, question_id, code, stdout, stderr, is_correct,
-                     execution_time_ms, pep8_score)
-                VALUES
-                    (:user_id, :question_id, :code, :stdout, :stderr, :is_correct,
-                     :exec_ms, :pep8_score)
-            """),
-            {
-                "user_id": str(user.id) if user else None,
-                "question_id": body.question_id,
-                "code": body.code,
-                "stdout": sandbox.stdout,
-                "stderr": sandbox.stderr,
-                "is_correct": is_correct,
-                "exec_ms": elapsed_ms,
-                "pep8_score": lint.score,
-            },
-        )
-        await db.commit()
-    except Exception:
-        await db.rollback()
+    await persist_code_submission(
+        db,
+        user=user,
+        question_id=body.question_id,
+        code=body.code,
+        stdout=stdout,
+        stderr=stderr,
+        is_correct=is_correct,
+        execution_time_ms=elapsed_ms,
+        pep8_score=lint.score,
+    )
 
     return ExecuteResponse(
-        stdout=sandbox.stdout,
-        stderr=sandbox.stderr,
+        stdout=stdout,
+        stderr=stderr,
         is_correct=is_correct,
         execution_time_ms=elapsed_ms,
         pep8_violations=lint.violations,

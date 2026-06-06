@@ -6,6 +6,7 @@ import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { api, type QuestionSummary, type TopicDetail } from "@/lib/api";
 import type { ModuleCurriculum } from "@/lib/lessons/types";
 import { getAccessToken } from "@/lib/auth";
+import { getExerciseHref } from "@/lib/utils";
 
 const DIFFICULTY_ORDER = ["basic", "intermediate", "advanced"] as const;
 
@@ -80,7 +81,7 @@ export function ModuleExercisesSection({ topicSlug, curriculum }: Props) {
         <div className="rounded-lg border border-slate-800 bg-slate-900/40 px-4 py-3">
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href={`/modules/${topicSlug}/${q.id}`}
+              href={getExerciseHref(topicSlug, q.id, q.question_type)}
               className="font-medium text-slate-100 hover:text-indigo-300"
             >
               {q.title}
@@ -147,7 +148,7 @@ export function ModuleExercisesSection({ topicSlug, curriculum }: Props) {
           {topic.questions.map((q) => (
             <li key={q.id}>
               <Link
-                href={`/modules/${topicSlug}/${q.id}`}
+                href={getExerciseHref(topicSlug, q.id, q.question_type)}
                 className="flex flex-wrap items-center gap-3 rounded-lg border border-slate-800 bg-slate-900/40 px-4 py-3 transition hover:border-indigo-500/40"
               >
                 <span className="font-medium text-slate-100">{q.title}</span>

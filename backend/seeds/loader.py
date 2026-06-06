@@ -56,14 +56,16 @@ async def seed_questions_for_topic(
                     INSERT INTO questions (
                         topic_id, title, slug, difficulty, question_type,
                         problem_statement, constraints, starter_code,
-                        expected_output, expected_output_shape,
+                        expected_output, expected_output_type, expected_output_shape,
+                        run_in_browser, pep8_required,
                         pytorch_version, gpu_required, colab_link,
                         tags, xp_reward, time_estimate_mins,
                         is_published, source
                     ) VALUES (
                         :topic_id, :title, :slug, :difficulty, :question_type,
                         :problem_statement, :constraints, :starter_code,
-                        :expected_output, :expected_output_shape,
+                        :expected_output, :expected_output_type, :expected_output_shape,
+                        :run_in_browser, :pep8_required,
                         :pytorch_version, :gpu_required, :colab_link,
                         :tags, :xp_reward, :time_estimate_mins,
                         TRUE, 'internal'
@@ -79,7 +81,10 @@ async def seed_questions_for_topic(
                     "constraints": q.get("constraints"),
                     "starter_code": q.get("starter_code"),
                     "expected_output": q.get("expected_output"),
+                    "expected_output_type": q.get("expected_output_type", "exact"),
                     "expected_output_shape": q.get("expected_output_shape"),
+                    "run_in_browser": q.get("run_in_browser", True),
+                    "pep8_required": q.get("pep8_required", False),
                     "pytorch_version": "2.x",
                     "gpu_required": q.get("gpu_required", False),
                     "colab_link": q.get("colab_link", ""),
@@ -174,14 +179,16 @@ async def append_questions_for_topic(
                     INSERT INTO questions (
                         topic_id, title, slug, difficulty, question_type,
                         problem_statement, constraints, starter_code,
-                        expected_output, expected_output_shape,
+                        expected_output, expected_output_type, expected_output_shape,
+                        run_in_browser, pep8_required,
                         pytorch_version, gpu_required, colab_link,
                         tags, xp_reward, time_estimate_mins,
                         is_published, source
                     ) VALUES (
                         :topic_id, :title, :slug, :difficulty, :question_type,
                         :problem_statement, :constraints, :starter_code,
-                        :expected_output, :expected_output_shape,
+                        :expected_output, :expected_output_type, :expected_output_shape,
+                        :run_in_browser, :pep8_required,
                         :pytorch_version, :gpu_required, :colab_link,
                         :tags, :xp_reward, :time_estimate_mins,
                         TRUE, 'internal'
@@ -197,7 +204,10 @@ async def append_questions_for_topic(
                     "constraints": q.get("constraints"),
                     "starter_code": q.get("starter_code"),
                     "expected_output": q.get("expected_output"),
+                    "expected_output_type": q.get("expected_output_type", "exact"),
                     "expected_output_shape": q.get("expected_output_shape"),
+                    "run_in_browser": q.get("run_in_browser", True),
+                    "pep8_required": q.get("pep8_required", False),
                     "pytorch_version": "2.x",
                     "gpu_required": q.get("gpu_required", False),
                     "colab_link": q.get("colab_link", ""),

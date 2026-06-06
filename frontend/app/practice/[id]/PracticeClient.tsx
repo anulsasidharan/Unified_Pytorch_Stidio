@@ -26,7 +26,6 @@ export function PracticeClient({ question }: Props) {
   const [lintLoading, setLintLoading] = useState(false);
 
   const expectedOutput = question.expected_output ?? null;
-  const checkType = question.expected_output_type ?? "exact";
   const timeLimit = question.time_estimate_mins ? question.time_estimate_mins * 60 * 1000 : 30000;
 
   useEffect(() => {
@@ -50,70 +49,66 @@ export function PracticeClient({ question }: Props) {
     setRunning(true);
     setIsCorrect(null);
     try {
-      let stdout = "";
-      let stderr = "";
+      let runStdout = "";
+      let runStderr = "";
       let runError: string | null = null;
       let elapsed: number | undefined;
 
       if (question.run_in_browser) {
-        // Pyodide browser-side execution
         try {
           const result = await runPython(code, timeLimit);
-          stdout = result.stdout;
-          stderr = result.stderr;
+          runStdout = result.stdout;
+          runStderr = result.stderr;
           runError = result.error;
           elapsed = result.executionTimeMs;
         } catch {
-          // Fall back to server-side if Pyodide fails to load
           const result = await api.executeCode({ code, question_id: question.id });
-          stdout = result.stdout;
-          stderr = result.stderr;
-          elapsed = result.execution_time_ms;
-          if (result.is_correct !== null) {
-            setIsCorrect(result.is_correct);
-            setStdout(stdout);
-            setStderr(stderr);
-            setError(null);
-            setExecutionTimeMs(elapsed);
-            return;
-          }
-        }
-      } else {
-        // Server-side execution
-        const result = await api.executeCode({ code, question_id: question.id });
-        stdout = result.stdout;
-        stderr = result.stderr;
-        elapsed = result.execution_time_ms;
-        if (result.is_correct !== null) {
-          setIsCorrect(result.is_correct);
-          setStdout(stdout);
-          setStderr(stderr);
+          setStdout(result.stdout);
+          setStderr(result.stderr);
           setError(null);
-          setExecutionTimeMs(elapsed);
+          setExecutionTimeMs(result.execution_time_ms);
+          setIsCorrect(result.is_correct);
+          if (result.pep8_violations.length) {
+            setViolations(result.pep8_violations);
+            setLintScore(Math.max(0, 100 - result.pep8_violations.length * 5));
+          }
           return;
         }
+      } else {
+        const result = await api.executeCode({ code, question_id: question.id });
+        setStdout(result.stdout);
+        setStderr(result.stderr);
+        setError(null);
+        setExecutionTimeMs(result.execution_time_ms);
+        setIsCorrect(result.is_correct);
+        if (result.pep8_violations.length) {
+          setViolations(result.pep8_violations);
+          setLintScore(Math.max(0, 100 - result.pep8_violations.length * 5));
+        }
+        return;
       }
 
-      setStdout(stdout);
-      setStderr(stderr);
+      setStdout(runStdout);
+      setStderr(runStderr);
       setError(runError);
       setExecutionTimeMs(elapsed);
 
-      if (expectedOutput) {
-        const actual = stdout.trim();
-        const expected = expectedOutput.trim();
-        if (checkType === "contains") {
-          setIsCorrect(actual.includes(expected));
-        } else if (checkType === "regex") {
-          try { setIsCorrect(new RegExp(expected).test(actual)); } catch { setIsCorrect(false); }
-        } else {
-          setIsCorrect(actual === expected);
-        }
+      const gradeResult = await api.executeCode({
+        code,
+        question_id: question.id,
+        stdout: runStdout,
+        stderr: runStderr,
+        execution_time_ms: elapsed,
+      });
+      setIsCorrect(gradeResult.is_correct);
+      if (gradeResult.pep8_violations.length) {
+        setViolations(gradeResult.pep8_violations);
+        setLintScore(Math.max(0, 100 - gradeResult.pep8_violations.length * 5));
       }
     } finally {
       setRunning(false);
     }
-  }, [code, expectedOutput, checkType, timeLimit, question.id, question.run_in_browser]);
+  }, [code, timeLimit, question.id, question.run_in_browser]);
 
   return (
     <div className="space-y-4">
