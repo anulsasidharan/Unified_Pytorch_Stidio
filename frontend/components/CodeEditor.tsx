@@ -1,9 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { editor } from "monaco-editor";
 import { useTheme } from "@/components/theme/ThemeProvider";
+import { getSettings } from "@/lib/settings";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react").then((m) => m.default), {
   ssr: false,
@@ -30,16 +31,24 @@ export function CodeEditor({
   height = "360px",
 }: Props) {
   const { theme } = useTheme();
+  const [minimap, setMinimap] = useState(true);
   const editorTheme = theme === "dark" ? "vs-dark" : "vs";
 
-  const onMount = useCallback((ed: editor.IStandaloneCodeEditor) => {
-    ed.updateOptions({
-      minimap: { enabled: true },
-      fontSize: 14,
-      tabSize: 4,
-      multiCursorModifier: "alt",
-    });
+  useEffect(() => {
+    setMinimap(getSettings().editorMinimap);
   }, []);
+
+  const onMount = useCallback(
+    (ed: editor.IStandaloneCodeEditor) => {
+      ed.updateOptions({
+        minimap: { enabled: minimap },
+        fontSize: 14,
+        tabSize: 4,
+        multiCursorModifier: "alt",
+      });
+    },
+    [minimap],
+  );
 
   return (
     <div className="overflow-hidden rounded-lg border border-[var(--border)]">

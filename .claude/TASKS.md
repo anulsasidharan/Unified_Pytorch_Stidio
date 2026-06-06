@@ -107,20 +107,20 @@
 ## Phase 5 — Polish & Launch (Weeks 11–12)
 
 **Goal:** Tutor polish, leaderboard, mobile/SEO, production readiness.  
-**Phase status:** ❌ Pending (1/10 tasks complete)
+**Phase status:** ✅ Completed (10/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
 | P5-1 · AI tutor — Python prompt wired + offline fallback messages | `feature/python-tutor-live` | ✅ Completed |
-| P5-2 · OpenAI GPT-4o tutor path (spec §14 env vars) alongside Anthropic | `feature/openai-tutor` | ❌ Pending |
-| P5-3 · Leaderboard activation (`GET /leaderboard` + UI) | `feature/leaderboard` | ❌ Pending |
-| P5-4 · Mobile-responsive practice editor + snippet pages | `feature/responsive-practice` | ❌ Pending |
-| P5-5 · SEO / OG tags for modules, practice, snippets | `feature/seo-og` | ❌ Pending |
-| P5-6 · Settings page — editor theme, Pyodide version preference | `feature/settings-page` | ❌ Pending |
-| P5-7 · Analytics labels retheme (PyTorch → Python module names) | `feature/analytics-retheme` | ❌ Pending |
-| P5-8 · Remove/replace remaining PyTorch copy in UI and lessons | `feature/pytorch-copy-cleanup` | ❌ Pending |
-| P5-9 · `/modules/[slug]/[level]` route — basic/intermediate/advanced question lists | `feature/level-routes` | ❌ Pending |
-| P5-10 · Docker Compose production profile + env validation | `feature/docker-prod` | ❌ Pending |
+| P5-2 · OpenAI GPT-4o tutor path (spec §14 env vars) alongside Anthropic | `feature/openai-tutor` | ✅ Completed |
+| P5-3 · Leaderboard activation (`GET /leaderboard` + UI) | `feature/leaderboard` | ✅ Completed |
+| P5-4 · Mobile-responsive practice editor + snippet pages | `feature/responsive-practice` | ✅ Completed |
+| P5-5 · SEO / OG tags for modules, practice, snippets | `feature/seo-og` | ✅ Completed |
+| P5-6 · Settings page — editor theme, Pyodide version preference | `feature/settings-page` | ✅ Completed |
+| P5-7 · Analytics labels retheme (PyTorch → Python module names) | `feature/analytics-retheme` | ✅ Completed |
+| P5-8 · Remove/replace remaining PyTorch copy in UI and lessons | `feature/pytorch-copy-cleanup` | ✅ Completed |
+| P5-9 · `/modules/[slug]/[level]` route — basic/intermediate/advanced question lists | `feature/level-routes` | ✅ Completed |
+| P5-10 · Docker Compose production profile + env validation | `feature/docker-prod` | ✅ Completed |
 
 **Exit:** Production-quality UX; no stale PyTorch references in user-facing surfaces.
 
@@ -169,7 +169,7 @@
 | Phase 2 — Live Execution Engine | ✅ Completed | 12 / 12 |
 | Phase 3 — Content Seeding | ✅ Completed | 10 / 10 |
 | Phase 4 — Advanced Features | ✅ Completed | 12 / 12 |
-| Phase 5 — Polish & Launch | ❌ Pending | 1 / 10 |
+| Phase 5 — Polish & Launch | ✅ Completed | 10 / 10 |
 | Phase 6 — Production | ❌ Pending | 0 / 6 |
 | Inherited baseline | ✅ Completed | 8 / 8 |
 

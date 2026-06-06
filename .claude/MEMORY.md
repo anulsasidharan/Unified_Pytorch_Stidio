@@ -4,7 +4,7 @@
 
 **Last updated:** 2026-06-06  
 **Specification version:** `rules/CLAUDE.md` v1.0  
-**Repository state:** Phase 5 **complete** — Modules 08–13 seeded, bulk expansion (~520 exercises), search UI/API, editor shortcuts, dark mode, responsive nav
+**Repository state:** Python fork Phase 5 **complete** — OpenAI tutor, leaderboard, settings, SEO/OG, level routes, prod Docker profile
 
 ---
 
@@ -133,3 +133,4 @@
 | 2026-06-06 | Python fork Phase 1 complete: `bootstrap_db.py`, dedupe wired via `ensure_topics` + entrypoint, 25 active Python modules verified (Docker + host) |
 | 2026-06-06 | Python fork Phase 3 complete: 610 questions seeded (modules 01–25), 100 snippets in `backend/data/snippets.json`, Python lesson curricula in `frontend/lib/lessons/content/python-curriculum.ts` |
 | 2026-06-06 | Python fork Phase 4 complete: batch grader UI, module project API/submissions (`project_submissions` migration 003), `.py` import, Colab Python notebooks, ModuleProgressRing, ExerciseClient Pyodide migration |
+| 2026-06-06 | Python fork Phase 5 complete: OpenAI GPT-4o tutor path, `GET /leaderboard` + UI, `/settings`, SEO/OG metadata, `/modules/[slug]/[segment]` level routes, mobile practice/snippets layout, prod env validation + `docker-compose.prod.yml` |

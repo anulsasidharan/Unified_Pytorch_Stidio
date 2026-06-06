@@ -508,6 +508,23 @@ export const api = {
 
   getFeaturedSnippets: () =>
     request<SnippetItem[]>("/snippets/featured", { revalidate: 300 }),
+
+  getLeaderboard: (period: "weekly" | "monthly" | "all_time" = "weekly") =>
+    request<LeaderboardData>(`/leaderboard?period=${period}`, { revalidate: 300 }),
+};
+
+export type LeaderboardEntry = {
+  rank: number;
+  user_id: string;
+  username: string;
+  xp: number;
+  exercises_solved: number;
+};
+
+export type LeaderboardData = {
+  period: string;
+  entries: LeaderboardEntry[];
+  updated_at: string;
 };
 
 export type SnippetItem = {

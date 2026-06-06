@@ -9,10 +9,12 @@ const NAV = [
   { href: "/snippets", label: "Snippets" },
   { href: "/exercises", label: "Search" },
   { href: "/tutor", label: "AI Tutor" },
+  { href: "/leaderboard", label: "Leaderboard" },
   { href: "/dashboard", label: "Dashboard" },
   { href: "/tracker", label: "Tracker" },
   { href: "/revision", label: "Revision" },
   { href: "/import", label: "Import" },
+  { href: "/settings", label: "Settings" },
 ];
 
 export function AppHeader() {

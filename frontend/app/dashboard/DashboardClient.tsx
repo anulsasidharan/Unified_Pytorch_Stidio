@@ -149,7 +149,7 @@ export function DashboardClient() {
 
       {progress && (
         <div>
-          <h2 className="text-lg font-semibold">Module progress</h2>
+          <h2 className="text-lg font-semibold">Python module progress</h2>
           <div className="mt-4 grid gap-3 sm:grid-cols-2">
             {progress.modules
               .filter((m) => m.questions_solved > 0 || m.completion_pct > 0)

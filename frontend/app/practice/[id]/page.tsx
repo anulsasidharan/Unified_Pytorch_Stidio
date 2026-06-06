@@ -3,11 +3,29 @@ import Link from "next/link";
 import { DifficultyBadge } from "@/components/question/DifficultyBadge";
 import { api } from "@/lib/api";
 import { getModuleMeta } from "@/lib/module-meta";
+import { buildMetadata } from "@/lib/seo";
 import { PracticeClient } from "./PracticeClient";
 
 export const revalidate = 600;
 
 type Props = { params: { id: string } };
+
+export async function generateMetadata({ params }: Props) {
+  const id = Number(params.id);
+  if (Number.isNaN(id)) return buildMetadata({ title: "Practice" });
+  try {
+    const question = await api.getQuestion(id);
+    const meta = getModuleMeta(question.topic_slug);
+    return buildMetadata({
+      title: question.title,
+      description: `${meta?.name ?? question.topic_slug} — ${question.difficulty} Python exercise with live execution`,
+      path: `/practice/${id}`,
+      type: "article",
+    });
+  } catch {
+    return buildMetadata({ title: "Practice" });
+  }
+}
 
 export default async function PracticePage({ params }: Props) {
   const id = Number(params.id);

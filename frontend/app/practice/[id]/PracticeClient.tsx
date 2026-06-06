@@ -192,29 +192,37 @@ export function PracticeClient({ question }: Props) {
 
   return (
     <div className="space-y-4">
-      <article className="prose-problem rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-5">
+      <article className="prose-problem rounded-xl border border-[var(--border)] bg-[var(--card-bg)] p-4 sm:p-5">
         <ReactMarkdown>{question.problem_statement}</ReactMarkdown>
       </article>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between">
         <RunButton onRun={handleRun} running={running} />
         <PEP8Badge score={lintScore} violations={violations} loading={lintLoading} />
       </div>
 
-      <CodeEditor initialCode={starter} value={code} onCodeChange={setCode} height="420px" />
-
-      {batchResults && batchScore !== null ? (
-        <BatchResults results={batchResults} score={batchScore} />
-      ) : (
-        <OutputPane
-          stdout={stdout}
-          stderr={stderr}
-          error={error}
-          isCorrect={expectedOutput || hasBatchTests ? isCorrect : null}
-          executionTimeMs={executionTimeMs}
-          expectedOutput={expectedOutput}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <CodeEditor
+          initialCode={starter}
+          value={code}
+          onCodeChange={setCode}
+          height="min(420px, 50vh)"
         />
-      )}
+        <div className="min-h-[200px] lg:min-h-0">
+          {batchResults && batchScore !== null ? (
+            <BatchResults results={batchResults} score={batchScore} />
+          ) : (
+            <OutputPane
+              stdout={stdout}
+              stderr={stderr}
+              error={error}
+              isCorrect={expectedOutput || hasBatchTests ? isCorrect : null}
+              executionTimeMs={executionTimeMs}
+              expectedOutput={expectedOutput}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }

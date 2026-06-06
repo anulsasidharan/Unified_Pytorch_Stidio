@@ -13,10 +13,16 @@ declare global {
   }
 }
 
+import { getPyodideVersion } from "./settings";
+
 let pyodide: any = null;
+let loadedVersion: string | null = null;
 
 function pyodideIndexUrl(): string {
-  const version = process.env.NEXT_PUBLIC_PYODIDE_VERSION ?? "0.25.0";
+  const version =
+    typeof window !== "undefined"
+      ? getPyodideVersion()
+      : (process.env.NEXT_PUBLIC_PYODIDE_VERSION ?? "0.25.0");
   return `https://cdn.jsdelivr.net/pyodide/v${version}/full/`;
 }
 
@@ -35,7 +41,10 @@ async function loadPyodideScript(): Promise<void> {
 }
 
 export async function initPyodide(): Promise<void> {
-  if (pyodide) return;
+  const version = getPyodideVersion();
+  if (pyodide && loadedVersion === version) return;
+  pyodide = null;
+  loadedVersion = version;
   await loadPyodideScript();
   if (!window.loadPyodide) {
     throw new Error("Pyodide loader not available");

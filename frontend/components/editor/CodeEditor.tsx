@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useCallback } from "react";
 import type { editor } from "monaco-editor";
 import { useTheme } from "@/components/theme/ThemeProvider";
-import { PYTORCH_SNIPPETS } from "./pytorch-snippets";
+import { PYTHON_SNIPPETS } from "./python-snippets";
 
 const MonacoEditor = dynamic(() => import("@monaco-editor/react").then((m) => m.default), {
   ssr: false,
@@ -23,7 +23,7 @@ type Props = {
 
 let snippetsRegistered = false;
 
-function registerPyTorchSnippets(monaco: typeof import("monaco-editor")) {
+function registerPythonSnippets(monaco: typeof import("monaco-editor")) {
   if (snippetsRegistered) return;
   snippetsRegistered = true;
   monaco.languages.registerCompletionItemProvider("python", {
@@ -36,7 +36,7 @@ function registerPyTorchSnippets(monaco: typeof import("monaco-editor")) {
         endColumn: word.endColumn,
       };
       return {
-        suggestions: PYTORCH_SNIPPETS.map((s) => ({
+        suggestions: PYTHON_SNIPPETS.map((s) => ({
           label: s.label,
           kind: monaco.languages.CompletionItemKind.Snippet,
           insertText: s.insertText,
@@ -55,7 +55,7 @@ export function CodeEditor({ value, onChange, readOnly }: Props) {
   const editorTheme = theme === "dark" ? "vs-dark" : "vs";
 
   const onMount = useCallback((ed: editor.IStandaloneCodeEditor, monaco: typeof import("monaco-editor")) => {
-    registerPyTorchSnippets(monaco);
+    registerPythonSnippets(monaco);
     ed.updateOptions({ minimap: { enabled: false }, fontSize: 14, tabSize: 4 });
   }, []);
 

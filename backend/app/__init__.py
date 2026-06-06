@@ -1,1 +1,1 @@
-"""PyTorch Learning Studio — FastAPI application package."""
+"""Unified Python Learning Studio — FastAPI application package."""

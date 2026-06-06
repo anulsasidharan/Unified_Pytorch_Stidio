@@ -34,7 +34,7 @@ export default function TutorPage() {
         </Link>
         <h1 className="mt-2 text-2xl font-bold">Python AI Tutor</h1>
         <p className="mt-1 text-sm text-slate-400">
-          Debug code, explain Python concepts, and review your solutions. Powered by Claude.
+          Debug code, explain Python concepts, and review your solutions. Powered by GPT-4o or Claude.
         </p>
         {exerciseContext && (
           <p className="mt-2 text-sm text-indigo-300">

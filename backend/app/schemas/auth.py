@@ -1,7 +1,7 @@
 from datetime import date, datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class RegisterRequest(BaseModel):
@@ -27,12 +27,14 @@ class RefreshRequest(BaseModel):
 
 
 class UserProfile(BaseModel):
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+
     id: UUID
     email: str
     username: str
     full_name: str | None
     avatar_url: str | None
-    pytorch_level: str
+    python_level: str = Field(validation_alias="pytorch_level")
     daily_goal: int
     streak_count: int
     longest_streak: int
@@ -40,10 +42,10 @@ class UserProfile(BaseModel):
     total_xp: int
     created_at: datetime
 
-    model_config = {"from_attributes": True}
-
 
 class UserProfileUpdate(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     full_name: str | None = None
-    pytorch_level: str | None = None
+    python_level: str | None = Field(default=None, validation_alias="pytorch_level")
     daily_goal: int | None = Field(default=None, ge=1, le=50)
