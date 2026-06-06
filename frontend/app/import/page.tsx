@@ -6,7 +6,7 @@ export default function ImportPage() {
       <div>
         <h1 className="text-2xl font-bold">Import custom exercises</h1>
         <p className="mt-2 text-slate-400">
-          Add your own PyTorch exercises via manual entry, CSV, JSON, or notebook URL.
+          Add your own Python exercises via manual entry, CSV, JSON, or notebook URL.
         </p>
       </div>
       <ImportClient />

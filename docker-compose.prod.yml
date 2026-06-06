@@ -1,4 +1,5 @@
-# Production compose — extend and wire frontend + Celery in Phase 6.
+# Production overrides — usage: docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
+
 services:
   backend:
     command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
@@ -6,3 +7,11 @@ services:
       APP_ENV: production
       RUN_MIGRATIONS: "true"
       SEED_TOPICS: "false"
+      SEED_QUESTIONS: "false"
+    volumes: []
+
+  celery-worker:
+    volumes: []
+
+  frontend:
+    volumes: []

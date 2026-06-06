@@ -141,7 +141,11 @@ export type QuestionDetail = {
   problem_statement: string;
   constraints: string | null;
   starter_code: string | null;
+  expected_output: string | null;
+  expected_output_type: string;
   expected_output_shape: string | null;
+  run_in_browser: boolean;
+  pep8_required: boolean;
   gpu_required: boolean;
   colab_link: string | null;
   pytorch_version: string;
@@ -220,7 +224,18 @@ export type AttemptSubmitResult = {
   message?: string;
 };
 
+export type ExecuteResult = {
+  stdout: string;
+  stderr: string;
+  is_correct: boolean | null;
+  execution_time_ms: number;
+  pep8_violations: { line: number; col: number; code: string; message: string }[];
+};
+
 export const api = {
+  executeCode: (body: { code: string; question_id?: number; time_limit_ms?: number }) =>
+    request<ExecuteResult>("/execute", { method: "POST", body: JSON.stringify(body) }),
+
   getTopics: (token?: string | null) =>
     request<TopicListItem[]>("/topics", { revalidate: token ? 0 : 300 }, token),
 

@@ -1,7 +1,7 @@
 import { ExercisesClient } from "./ExercisesClient";
 
 export const metadata = {
-  title: "Search Exercises — PyTorch Learning Studio",
+  title: "Search Exercises — Python Learning Studio",
 };
 
 export default function ExercisesPage() {
@@ -10,7 +10,7 @@ export default function ExercisesPage() {
       <div>
         <h1 className="text-2xl font-bold text-[var(--text-primary)]">Search exercises</h1>
         <p className="mt-2 text-[var(--text-muted)]">
-          Search across all 13 modules by title, tags, difficulty, or question type.
+          Search across all 25 Python modules by title, tags, difficulty, or question type.
         </p>
       </div>
       <ExercisesClient />

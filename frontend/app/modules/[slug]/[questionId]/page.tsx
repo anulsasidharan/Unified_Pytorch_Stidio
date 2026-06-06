@@ -53,8 +53,7 @@ export default async function ExercisePage({ params }: Props) {
           )}
         </div>
         <p className="mt-1 text-sm text-slate-500">
-          +{question.xp_reward} XP · ~{question.time_estimate_mins} min · PyTorch{" "}
-          {question.pytorch_version}
+          +{question.xp_reward} XP · ~{question.time_estimate_mins} min
         </p>
       </div>
 
@@ -75,7 +74,7 @@ export default async function ExercisePage({ params }: Props) {
           questionId={question.id}
           moduleName={question.topic_name ?? question.topic_slug}
           title={question.title}
-          starterCode={question.starter_code ?? "import torch\n"}
+          starterCode={question.starter_code ?? "# Write your Python code here\n"}
           colabLink={question.colab_link}
           questionType={question.question_type}
           expectedOutputShape={question.expected_output_shape}

@@ -12,28 +12,32 @@
 
 ## Phase 1 — Foundation Fork (Weeks 1–2)
 
-**Goal:** Domain swap PyTorch → Python — seeds, schema, theme, env, tutor prompt.
+**Goal:** Domain swap PyTorch → Python — seeds, schema, theme, env, tutor prompt.  
+**Phase status:** ❌ Pending (8/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
 | P1-1 · Rename app references to `unified-python-studio` (config, docker, package names) | `feature/python-rename` | ✅ Completed |
 | P1-2 · Replace `backend/seeds/topics.py` with 25 Python modules + level breakdown | `feature/python-topics-seed` | ✅ Completed |
-| P1-3 · SQL migration `001_python_studio_schema.sql` (question columns, `code_submissions`, `snippets`) | `feature/python-schema-migration` | ✅ Completed |
+| P1-3 · SQL migration `001_python_studio_schema.sql` + Alembic `002_python_studio_extensions` | `feature/python-schema-migration` | ✅ Completed |
 | P1-4 · Update `.env.example` + `config.py` (spec §14) | `feature/python-env` | ✅ Completed |
 | P1-5 · Retheme frontend — Python blue `#3776AB` / yellow `#FFD43B` | `feature/python-theme` | ✅ Completed |
 | P1-6 · Python tutor system prompt (`backend/app/services/chatbot.py`) | `feature/python-tutor-prompt` | ✅ Completed |
 | P1-7 · Update `module-meta.ts` + modules sidebar (25 modules) | `feature/python-module-meta` | ✅ Completed |
 | P1-8 · Rewrite `README.md` for Python Learning Studio | `feature/python-readme` | ✅ Completed |
 | P1-9 · Apply migration + re-seed topics in dev/staging DB | `feature/python-db-bootstrap` | ❌ Pending |
-| P1-10 · Deactivate legacy PyTorch topic rows (`dedupe_topics.py`) | `feature/python-topic-dedupe` | ❌ Pending |
+| P1-10 · Deactivate legacy PyTorch topic rows (`dedupe_topics.py` wired to bootstrap) | `feature/python-topic-dedupe` | ❌ Pending |
 
 **Exit:** DB has 25 Python modules; app branding and theme reflect Python Learning Studio.
+
+> **Note:** `docker-entrypoint.sh` runs Alembic + `ensure_topics` + `run_python_seeds` when `SEED_*` flags are true, but P1-9/P1-10 still need verified runs on non-Docker dev DBs and dedupe wired into the entrypoint.
 
 ---
 
 ## Phase 2 — Live Execution Engine (Weeks 3–4)
 
-**Goal:** Monaco + Pyodide in browser, auto-grader, PEP 8 linter, server sandbox fallback.
+**Goal:** Monaco + Pyodide in browser, auto-grader, PEP 8 linter, server sandbox fallback.  
+**Phase status:** ✅ Completed (12/12 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -46,9 +50,9 @@
 | P2-7 · `sandbox.py` — server-side subprocess fallback | `feature/sandbox-service` | ✅ Completed |
 | P2-8 · Routes: `POST /execute`, `POST /execute/batch`, `POST /lint` | `feature/execute-lint-routes` | ✅ Completed |
 | P2-9 · `/practice/[id]` page — embed CodeEditor + RunButton + OutputPane | `feature/practice-page` | ✅ Completed |
-| P2-10 · Wire practice page to question `expected_output` grading end-to-end | `feature/practice-grading-e2e` | ❌ Pending |
-| P2-11 · Persist submissions to `code_submissions` table on run/submit | `feature/code-submissions` | ❌ Pending |
-| P2-12 · Add ORM columns: `expected_output_type`, `run_in_browser`, `pep8_required`, etc. | `feature/question-orm-extensions` | ❌ Pending |
+| P2-10 · Wire practice page to question `expected_output` grading end-to-end | `feature/practice-grading-e2e` | ✅ Completed |
+| P2-11 · Persist submissions to `code_submissions` table on run/submit | `feature/code-submissions` | ✅ Completed |
+| P2-12 · Add ORM columns: `expected_output_type`, `run_in_browser`, `pep8_required`, etc. | `feature/question-orm-extensions` | ✅ Completed |
 
 **Exit:** User runs Python in browser on `/practice/{id}`; server fallback grades non-Pyodide exercises.
 
@@ -56,17 +60,18 @@
 
 ## Phase 3 — Content Seeding (Weeks 5–7)
 
-**Goal:** 660 Python questions across 25 modules + starter snippet library (spec §12).
+**Goal:** 660 Python questions across 25 modules + starter snippet library (spec §12).  
+**Phase status:** ❌ Pending (3/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
-| P3-1 · Seed all 25 topic rows via `ensure_topics.py` (idempotent) | `feature/seed-25-topics` | ❌ Pending |
-| P3-2 · Module 01–05 questions (~120) — Python basics through loops | `feature/seed-modules-01-05` | ❌ Pending |
+| P3-1 · Seed all 25 topic rows via `ensure_topics.py` (idempotent) | `feature/seed-25-topics` | ✅ Completed |
+| P3-2 · Module 01–05 questions — Python basics through loops (~94 seeded) | `feature/seed-modules-01-05` | ✅ Completed |
 | P3-3 · Module 06–10 questions (~130) — lists through dunder methods | `feature/seed-modules-06-10` | ❌ Pending |
 | P3-4 · Module 11–15 questions (~120) — packages through decorators | `feature/seed-modules-11-15` | ❌ Pending |
 | P3-5 · Module 16–20 questions (~130) — functional through stdlib | `feature/seed-modules-16-20` | ❌ Pending |
 | P3-6 · Module 21–25 questions (~130) — concurrency through data scripting | `feature/seed-modules-21-25` | ❌ Pending |
-| P3-7 · Question JSON format: `starter_code`, `expected_output`, `test_cases`, hints | `feature/python-question-format` | ❌ Pending |
+| P3-7 · Question JSON format: `starter_code`, `expected_output`, `test_cases`, hints | `feature/python-question-format` | ✅ Completed |
 | P3-8 · Seed 100 starter snippets (`snippets` table + `snippets.json`) | `feature/seed-snippets` | ❌ Pending |
 | P3-9 · Update lesson content (`lib/lessons/`) for Modules 01–05 | `feature/python-lessons-01-05` | ❌ Pending |
 | P3-10 · Update lesson content for Modules 06–25 | `feature/python-lessons-06-25` | ❌ Pending |
@@ -77,7 +82,8 @@
 
 ## Phase 4 — Advanced Features (Weeks 8–10)
 
-**Goal:** Projects, snippet library, batch grader UX, `.py` import, module progress API.
+**Goal:** Projects, snippet library, batch grader UX, `.py` import, module progress API.  
+**Phase status:** ❌ Pending (5/12 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -100,7 +106,8 @@
 
 ## Phase 5 — Polish & Launch (Weeks 11–12)
 
-**Goal:** Tutor polish, leaderboard, mobile/SEO, production readiness.
+**Goal:** Tutor polish, leaderboard, mobile/SEO, production readiness.  
+**Phase status:** ❌ Pending (1/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -121,7 +128,8 @@
 
 ## Phase 6 — Production (Weeks 13–16)
 
-**Goal:** CI/CD, tests, load validation, AWS deployment.
+**Goal:** CI/CD, tests, load validation, AWS deployment.  
+**Phase status:** ❌ Pending (0/6 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -138,6 +146,8 @@
 
 ## Inherited baseline (PyTorch Studio — no re-work unless regressed)
 
+**Phase status:** ✅ Completed
+
 | Area | Status |
 |------|--------|
 | Docker Compose (PostgreSQL, Redis, backend, frontend) | ✅ Completed |
@@ -148,6 +158,20 @@
 | Community questions + user notes | ✅ Completed |
 | Dark mode + responsive nav | ✅ Completed |
 | Search & filter exercises | ✅ Completed |
+
+---
+
+## Summary
+
+| Phase | Status | Progress |
+|-------|--------|----------|
+| Phase 1 — Foundation Fork | ❌ Pending | 8 / 10 |
+| Phase 2 — Live Execution Engine | ✅ Completed | 12 / 12 |
+| Phase 3 — Content Seeding | ❌ Pending | 3 / 10 |
+| Phase 4 — Advanced Features | ❌ Pending | 5 / 12 |
+| Phase 5 — Polish & Launch | ❌ Pending | 1 / 10 |
+| Phase 6 — Production | ❌ Pending | 0 / 6 |
+| Inherited baseline | ✅ Completed | 8 / 8 |
 
 ---
 
