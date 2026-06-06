@@ -12,7 +12,7 @@ if [ "${SEED_TOPICS:-true}" = "true" ]; then
 fi
 
 if [ "${SEED_QUESTIONS:-true}" = "true" ]; then
-  echo "Seeding Python questions for modules 01-05 (idempotent)..."
+  echo "Seeding Python questions + snippets for modules 01-25 (idempotent)..."
   python -m seeds.run_python_seeds
 fi
 

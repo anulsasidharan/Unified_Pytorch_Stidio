@@ -61,22 +61,22 @@
 ## Phase 3 — Content Seeding (Weeks 5–7)
 
 **Goal:** 660 Python questions across 25 modules + starter snippet library (spec §12).  
-**Phase status:** ❌ Pending (3/10 tasks complete)
+**Phase status:** ✅ Completed (10/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
 | P3-1 · Seed all 25 topic rows via `ensure_topics.py` (idempotent) | `feature/seed-25-topics` | ✅ Completed |
-| P3-2 · Module 01–05 questions — Python basics through loops (~94 seeded) | `feature/seed-modules-01-05` | ✅ Completed |
-| P3-3 · Module 06–10 questions (~130) — lists through dunder methods | `feature/seed-modules-06-10` | ❌ Pending |
-| P3-4 · Module 11–15 questions (~120) — packages through decorators | `feature/seed-modules-11-15` | ❌ Pending |
-| P3-5 · Module 16–20 questions (~130) — functional through stdlib | `feature/seed-modules-16-20` | ❌ Pending |
-| P3-6 · Module 21–25 questions (~130) — concurrency through data scripting | `feature/seed-modules-21-25` | ❌ Pending |
+| P3-2 · Module 01–05 questions — Python basics through loops (94 seeded) | `feature/seed-modules-01-05` | ✅ Completed |
+| P3-3 · Module 06–10 questions (152) — lists through dunder methods | `feature/seed-modules-06-10` | ✅ Completed |
+| P3-4 · Module 11–15 questions (124) — packages through decorators | `feature/seed-modules-11-15` | ✅ Completed |
+| P3-5 · Module 16–20 questions (126) — functional through stdlib | `feature/seed-modules-16-20` | ✅ Completed |
+| P3-6 · Module 21–25 questions (114) — concurrency through data scripting | `feature/seed-modules-21-25` | ✅ Completed |
 | P3-7 · Question JSON format: `starter_code`, `expected_output`, `test_cases`, hints | `feature/python-question-format` | ✅ Completed |
-| P3-8 · Seed 100 starter snippets (`snippets` table + `snippets.json`) | `feature/seed-snippets` | ❌ Pending |
-| P3-9 · Update lesson content (`lib/lessons/`) for Modules 01–05 | `feature/python-lessons-01-05` | ❌ Pending |
-| P3-10 · Update lesson content for Modules 06–25 | `feature/python-lessons-06-25` | ❌ Pending |
+| P3-8 · Seed 100 starter snippets (`snippets` table + `snippets.json`) | `feature/seed-snippets` | ✅ Completed |
+| P3-9 · Update lesson content (`lib/lessons/`) for Modules 01–05 | `feature/python-lessons-01-05` | ✅ Completed |
+| P3-10 · Update lesson content for Modules 06–25 | `feature/python-lessons-06-25` | ✅ Completed |
 
-**Exit:** All 25 modules have exercises at target counts; snippet library has starter content.
+**Exit:** All 25 modules have exercises (610 total) + 100 starter snippets; lesson curricula cover all modules via `python-curriculum.ts`.
 
 ---
 
@@ -167,7 +167,7 @@
 |-------|--------|----------|
 | Phase 1 — Foundation Fork | ✅ Completed | 10 / 10 |
 | Phase 2 — Live Execution Engine | ✅ Completed | 12 / 12 |
-| Phase 3 — Content Seeding | ❌ Pending | 3 / 10 |
+| Phase 3 — Content Seeding | ✅ Completed | 10 / 10 |
 | Phase 4 — Advanced Features | ❌ Pending | 5 / 12 |
 | Phase 5 — Polish & Launch | ❌ Pending | 1 / 10 |
 | Phase 6 — Production | ❌ Pending | 0 / 6 |
