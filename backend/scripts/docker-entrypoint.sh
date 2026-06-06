@@ -7,8 +7,7 @@ if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
 fi
 
 if [ "${SEED_TOPICS:-true}" = "true" ]; then
-  echo "Seeding Python Learning Studio topics (idempotent)..."
-  python -m seeds.topics
+  echo "Seeding Python Learning Studio topics + dedupe (idempotent)..."
   python -m seeds.ensure_topics
 fi
 

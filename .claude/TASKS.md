@@ -13,7 +13,7 @@
 ## Phase 1 — Foundation Fork (Weeks 1–2)
 
 **Goal:** Domain swap PyTorch → Python — seeds, schema, theme, env, tutor prompt.  
-**Phase status:** ❌ Pending (8/10 tasks complete)
+**Phase status:** ✅ Completed (10/10 tasks complete)
 
 | Task | Branch | Status |
 |------|--------|--------|
@@ -25,12 +25,12 @@
 | P1-6 · Python tutor system prompt (`backend/app/services/chatbot.py`) | `feature/python-tutor-prompt` | ✅ Completed |
 | P1-7 · Update `module-meta.ts` + modules sidebar (25 modules) | `feature/python-module-meta` | ✅ Completed |
 | P1-8 · Rewrite `README.md` for Python Learning Studio | `feature/python-readme` | ✅ Completed |
-| P1-9 · Apply migration + re-seed topics in dev/staging DB | `feature/python-db-bootstrap` | ❌ Pending |
-| P1-10 · Deactivate legacy PyTorch topic rows (`dedupe_topics.py` wired to bootstrap) | `feature/python-topic-dedupe` | ❌ Pending |
+| P1-9 · Apply migration + re-seed topics in dev/staging DB | `feature/python-db-bootstrap` | ✅ Completed |
+| P1-10 · Deactivate legacy PyTorch topic rows (`dedupe_topics.py` wired to bootstrap) | `feature/python-topic-dedupe` | ✅ Completed |
 
 **Exit:** DB has 25 Python modules; app branding and theme reflect Python Learning Studio.
 
-> **Note:** `docker-entrypoint.sh` runs Alembic + `ensure_topics` + `run_python_seeds` when `SEED_*` flags are true, but P1-9/P1-10 still need verified runs on non-Docker dev DBs and dedupe wired into the entrypoint.
+> **Note:** `docker-entrypoint.sh` and `backend/scripts/bootstrap_db.py` run Alembic + `ensure_topics` (includes dedupe) + `run_python_seeds` when `SEED_*` flags are true. Non-Docker dev: `cd backend && python scripts/bootstrap_db.py`.
 
 ---
 
@@ -165,7 +165,7 @@
 
 | Phase | Status | Progress |
 |-------|--------|----------|
-| Phase 1 — Foundation Fork | ❌ Pending | 8 / 10 |
+| Phase 1 — Foundation Fork | ✅ Completed | 10 / 10 |
 | Phase 2 — Live Execution Engine | ✅ Completed | 12 / 12 |
 | Phase 3 — Content Seeding | ❌ Pending | 3 / 10 |
 | Phase 4 — Advanced Features | ❌ Pending | 5 / 12 |

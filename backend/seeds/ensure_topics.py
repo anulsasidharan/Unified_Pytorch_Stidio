@@ -16,8 +16,10 @@ load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://postgres:password@localhost:5432/python_studio",
+    "postgresql+asyncpg://postgres:postgres@localhost:5432/python_studio",
 )
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
 
 async def ensure_all_topics() -> int:

@@ -24,19 +24,34 @@ load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql+asyncpg://postgres:password@localhost:5432/pytorch_studio",
+    "postgresql+asyncpg://postgres:postgres@localhost:5432/python_studio",
 )
+if DATABASE_URL.startswith("postgresql://"):
+    DATABASE_URL = DATABASE_URL.replace("postgresql://", "postgresql+asyncpg://", 1)
 
-# Superseded slugs — canonical slugs live in TOPICS
+# Superseded PyTorch slugs — canonical Python slugs live in TOPICS
 LEGACY_TOPIC_SLUGS = frozenset(
     {
+        "tensors",
+        "autograd",
+        "nn-module",
+        "training-loops",
+        "loss-functions",
         "loss-metrics",
         "datasets",
+        "datasets-dataloaders",
         "cnns",
+        "cnns-computer-vision",
         "rnns",
+        "rnns-lstms",
         "transformers",
+        "transformers-attention",
+        "transfer-learning",
         "deployment",
+        "model-deployment",
+        "gpu-cuda",
         "lightning",
+        "pytorch-lightning",
     }
 )
 
@@ -63,6 +78,21 @@ async def deactivate_duplicate_topics() -> int:
                 {"slug": slug},
             )
             deactivated += len(result.fetchall())
+
+        # Deactivate any remaining active row whose slug is not in the Python canon
+        result = await session.execute(
+            text(
+                """
+                UPDATE topics
+                SET is_active = FALSE
+                WHERE is_active = TRUE
+                  AND slug != ALL(:canonical_slugs)
+                RETURNING id
+                """
+            ),
+            {"canonical_slugs": list(CANONICAL_SLUGS)},
+        )
+        deactivated += len(result.fetchall())
 
         rows = (
             await session.execute(
